@@ -53,3 +53,6 @@
 
 #define New_Var(data)  \
     Tree_New_Node(Var_Type, data)
+
+#define New_Var_New(var)    \
+    Tree_New_Node(Var_Type, 0, var)

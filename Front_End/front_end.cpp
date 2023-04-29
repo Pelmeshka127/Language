@@ -1,4 +1,5 @@
 #include "front_end.h"
+#include <ctype.h>
 
 //-------------------------------------------------------------------------------//
 
@@ -18,6 +19,7 @@ tree_node * Get_General(char **str)
 tree_node * Get_Add_Or_Sub(char **str)
 {
     tree_node *node_1 = Get_Mul_Or_Div(str);
+    Skip_Spaces(str);
 
     while (**str == '+' || **str == '-')
     {
@@ -25,6 +27,8 @@ tree_node * Get_Add_Or_Sub(char **str)
 
         char op = **str;
         (*str)++;
+
+        Skip_Spaces(str);
 
         tree_node *node_2 = Get_Mul_Or_Div(str);
 
@@ -121,25 +125,25 @@ tree_node * Get_Func(char **str)
 
 int Is_Func(char **str)
 {
-    if (**str == 's' && *(*str + 1) == 'i' && *(*str + 2) == 'n')
+    if (**str == 's' && *(*str + 1) == 'i' && *(*str + 2) == 'n' && *(*str + 3) == '(')
     {
         *str += 3;
         return Op_Sin;
     }
 
-    else if (**str == 'c' && *(*str + 1) == 'o' && *(*str + 2) == 's')
+    else if (**str == 'c' && *(*str + 1) == 'o' && *(*str + 2) == 's' && *(*str + 3) == '(')
     {
         *str += 3;
         return Op_Cos;
     }
 
-    else if (**str == 'l' && *(*str + 1) == 'n')
+    else if (**str == 'l' && *(*str + 1) == 'n' && *(*str + 2) == '(')
     {
         *str += 2;
         return Op_Ln;
     }
 
-    else if (**str == 'e' && *(*str + 1) == 'x' && *(*str + 2) == 'p')
+    else if (**str == 'e' && *(*str + 1) == 'x' && *(*str + 2) == 'p' && *(*str + 3) == '(')
     {
         *str += 3;
         return Op_Exp;
@@ -173,10 +177,22 @@ tree_node * Get_Petrovich(char **str)
 
 tree_node * Get_Var(char **str)
 {
-    int type = Is_Var(str);
+    char *var = (char *)calloc (Max_Size, sizeof(char));
+    
+    sscanf(*str, "%s", var);
+    if (var[strlen(var) - 1] == ')')
+        var[strlen(var) - 1] = '\0';
 
-    if (type == Var_X)
-        return New_Var(Var_X);
+    int type = New_Is_Var(var);
+
+    if (type == Var_Type)
+    {
+        (*str)+=strlen(var);
+        if (**str == ' ')
+            (*str)++;
+        printf("%s\n", var);
+        return New_Var_New(var);
+    }
 
     return Get_Number(str);
 }
@@ -194,14 +210,28 @@ int Is_Var(char **str)
     return No_Error;
 }
 
+int New_Is_Var(char *var)
+{
+    int is_var = Var_Type;
+
+    for (int ch = 0; ch < strlen(var); ch++)
+    {
+        if ( !(isalpha(var[ch])) )
+        {
+            is_var = 0;
+            break;
+        }
+    }
+
+    return is_var;
+}
+
 //-------------------------------------------------------------------------------//
 
 tree_node * Get_Number(char **str)
 {
     int value = 0;
     int len = 0;
-
-    printf("%s\n", *str);
 
     sscanf(*str, "%d%n", &value, &len);
     assert(len);
@@ -212,3 +242,9 @@ tree_node * Get_Number(char **str)
 }
 
 //-------------------------------------------------------------------------------//
+
+void Skip_Spaces(char **str)
+{
+    while (**str == ' ')
+        (*str)++;
+}

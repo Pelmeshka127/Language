@@ -98,7 +98,7 @@ void Tree_Draw(tree_node * const root)
                             "   label = \" <value> %d\"];\n", root, root->data);
     else if (root->type == Var_Type)
         fprintf(graph_file, "   \"%p\"[shape = Mrecord, style = filled, fillcolor = \"yellow\","
-                            "   label = \" <value> %c\"];\n", root, Tree_Get_Variable_By_Number(root->data));
+                            "   label = \" <value> %s\"];\n", root, root->name);
     
     if (root->left != nullptr)
         fprintf(graph_file, "  \"%p\" -> \"%p\" [color = \"green\"];\n", root, root->left);

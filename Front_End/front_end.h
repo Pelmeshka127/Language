@@ -75,4 +75,13 @@ int Is_Func(char **str);
 /// @return 
 int Is_Var(char **str);
 
+/// @brief 
+/// @param var 
+/// @return 
+int New_Is_Var(char *var);
+
+/// @brief 
+/// @param str 
+void Skip_Spaces(char **str);
+
 #endif

@@ -3,17 +3,5 @@ digraph Tree
    rankdir = HR;
    node[fontsize=14];
    edge[color="black",fontcolor="blue",fontsize=12];
-   "0x104701ed0"[shape = Mrecord, style = filled, fillcolor = "cornflowerblue",   label = " <value> -"];
-  "0x104701ed0" -> "0x104701f90" [color = "green"];
-  "0x104701ed0" -> "0x104701f00" [color = "red"];
-   "0x104701f90"[shape = Mrecord, style = filled, fillcolor = "cornflowerblue",   label = " <value> +"];
-  "0x104701f90" -> "0x104701ff0" [color = "green"];
-  "0x104701f90" -> "0x104701fc0" [color = "red"];
-   "0x104701ff0"[shape = Mrecord, style = filled, fillcolor = "pink1",   label = " <value> 3"];
-   "0x104701fc0"[shape = Mrecord, style = filled, fillcolor = "pink1",   label = " <value> 4"];
-   "0x104701f00"[shape = Mrecord, style = filled, fillcolor = "cornflowerblue",   label = " <value> *"];
-  "0x104701f00" -> "0x104701f60" [color = "green"];
-  "0x104701f00" -> "0x104701f30" [color = "red"];
-   "0x104701f60"[shape = Mrecord, style = filled, fillcolor = "pink1",   label = " <value> 5"];
-   "0x104701f30"[shape = Mrecord, style = filled, fillcolor = "pink1",   label = " <value> 7"];
+   "0x106c01f00"[shape = Mrecord, style = filled, fillcolor = "yellow",   label = " <value> sin"];
 }
