@@ -8,6 +8,7 @@ struct Text_Info {
     int symbols_count;
     int lines_count;
     char ** pointers;
+    int char_num;
 };
 
 #define ONEGIN_ERROR() \

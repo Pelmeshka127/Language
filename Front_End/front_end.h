@@ -10,78 +10,75 @@
 /// @brief 
 /// @param str 
 /// @return 
-tree_node * Get_General(char **str);
+tree_node * Get_General(Text_Info * onegin);
 
 //-------------------------------------------------------------------------------//
 
 /// @brief 
 /// @param str 
 /// @return 
-tree_node * Get_Add_Or_Sub(char **str);
+tree_node * Get_Add_Or_Sub(Text_Info * onegin);
 
 //-------------------------------------------------------------------------------//
 
 /// @brief 
 /// @param str 
 /// @return 
-tree_node * Get_Mul_Or_Div(char **str);
+tree_node * Get_Mul_Or_Div(Text_Info * onegin);
 
 //-------------------------------------------------------------------------------//
 
 /// @brief 
 /// @param str 
 /// @return 
-tree_node * Get_Power(char **str);
+tree_node * Get_Power(Text_Info * onegin);
 
 //-------------------------------------------------------------------------------//
 
 /// @brief 
 /// @param str 
 /// @return 
-tree_node * Get_Petrovich(char **str);
+tree_node * Get_Petrovich(Text_Info * onegin);
 
 //-------------------------------------------------------------------------------//
 
 /// @brief 
 /// @param str 
 /// @return 
-tree_node * Get_Number(char **str);
+tree_node * Get_Number(Text_Info * onegin);
 
 //-------------------------------------------------------------------------------//
 
 /// @brief 
 /// @param str 
 /// @return 
-tree_node * Get_Var(char **str);
+tree_node * Get_Var(Text_Info * onegin);
 
 //-------------------------------------------------------------------------------//
 
 /// @brief 
 /// @param str 
 /// @return 
-tree_node * Get_Func(char **str);
+tree_node * Get_Func(Text_Info * onegin);
 
 //-------------------------------------------------------------------------------//
 
 /// @brief 
 /// @param str 
 /// @return 
-int Is_Func(char **str);
+int Is_Func(Text_Info * onegin);
 
 //-------------------------------------------------------------------------------//
-
-/// @brief 
-/// @param str 
-/// @return 
-int Is_Var(char **str);
 
 /// @brief 
 /// @param var 
 /// @return 
-int New_Is_Var(char *var);
+int Is_Var(char *var);
 
 /// @brief 
 /// @param str 
-void Skip_Spaces(char **str);
+void Skip_Spaces(Text_Info * onegin);
+
+tree_node * Get_Assignment(Text_Info * onegin);
 
 #endif

@@ -63,7 +63,7 @@ void Onegin_Print_To_File(Text_Info * const Onegin, FILE * fp)
 
 void Onegin_Dtor(Text_Info * const Onegin)
 {
-    free(Onegin->pointers);
+    //free(Onegin->pointers);
     free(Onegin->buffer);
 }
 

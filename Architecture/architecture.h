@@ -16,11 +16,13 @@ enum Errors_Code {
     Incorrect_Var   = 21,
 };
 
-const int Num_Type = 1;
+const int Num_Type      = 1;
 
-const int Op_Type  = 2;
+const int Op_Type       = 2;
 
-const int Var_Type = 3;
+const int Var_Type      = 3;
+
+const int Connect_Type  = 4;
 
 enum Operation_Types {
     Op_Add      = 1,
@@ -32,6 +34,7 @@ enum Operation_Types {
     Op_Cos      = 7,
     Op_Ln       = 8,
     Op_Exp      = 9,
+    Op_Eql      = 10,
 };
 
 enum Var_Types {

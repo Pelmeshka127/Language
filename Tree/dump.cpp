@@ -95,10 +95,14 @@ void Tree_Draw(tree_node * const root)
 
     else if (root->type == Num_Type)
         fprintf(graph_file, "   \"%p\"[shape = Mrecord, style = filled, fillcolor = \"pink1\","
-                            "   label = \" <value> %d\"];\n", root, root->data);
+                            "   label = \" <value> %d | NUM  \"];\n", root, root->data);
     else if (root->type == Var_Type)
         fprintf(graph_file, "   \"%p\"[shape = Mrecord, style = filled, fillcolor = \"yellow\","
-                            "   label = \" <value> %s\"];\n", root, root->name);
+                            "   label = \" <value> %s | var_data =  %d\"];\n", root, root->name, root->data);
+
+    else if (root->type == Connect_Type)
+        fprintf(graph_file, "   \"%p\"[shape = Mrecord, style = filled, fillcolor = \"pink1\","
+                            "   label = \" <value> Connect_Node\"];\n", root);
     
     if (root->left != nullptr)
         fprintf(graph_file, "  \"%p\" -> \"%p\" [color = \"green\"];\n", root, root->left);

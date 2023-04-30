@@ -3,11 +3,14 @@
 
 //-------------------------------------------------------------------------------//
 
-tree_node * Get_General(char **str)
+tree_node * Get_General(Text_Info * onegin)
 {
-    tree_node *node = Get_Add_Or_Sub(str);
+    tree_node *node = Get_Assignment(onegin);
 
-    assert(**str == '\0');
+    assert(**onegin->pointers == '\0');
+
+    // printf("%d\n", onegin->symbols_count);
+    // printf("%d\n", onegin->char_num);
 
     Tree_Dump_Node(node);
 
@@ -16,21 +19,22 @@ tree_node * Get_General(char **str)
 
 //-------------------------------------------------------------------------------//
 
-tree_node * Get_Add_Or_Sub(char **str)
+tree_node * Get_Add_Or_Sub(Text_Info * onegin)
 {
-    tree_node *node_1 = Get_Mul_Or_Div(str);
-    Skip_Spaces(str);
+    tree_node *node_1 = Get_Mul_Or_Div(onegin);
+    Skip_Spaces(onegin);
 
-    while (**str == '+' || **str == '-')
+    while (**onegin->pointers == '+' || **onegin->pointers == '-')
     {
         Tree_Dump_Node(node_1);
 
-        char op = **str;
-        (*str)++;
+        char op = **onegin->pointers;
+        (*onegin->pointers)++;
+        onegin->char_num++;
 
-        Skip_Spaces(str);
+        Skip_Spaces(onegin);
 
-        tree_node *node_2 = Get_Mul_Or_Div(str);
+        tree_node *node_2 = Get_Mul_Or_Div(onegin);
 
         Tree_Dump_Node(node_2);
 
@@ -46,18 +50,22 @@ tree_node * Get_Add_Or_Sub(char **str)
 
 //-------------------------------------------------------------------------------//
 
-tree_node * Get_Mul_Or_Div(char **str)
+tree_node * Get_Mul_Or_Div(Text_Info * onegin)
 {
-    tree_node *node_1 = Get_Power(str);
+    tree_node *node_1 = Get_Power(onegin);
+    Skip_Spaces(onegin);
 
-    while (**str == '*' || **str == '/')
+    while (**onegin->pointers == '*' || **onegin->pointers == '/')
     {
         Tree_Dump_Node(node_1);
 
-        char op = **str;
-        (*str)++;
+        char op = **onegin->pointers;
+        (*onegin->pointers)++;
+        onegin->char_num++;
 
-        tree_node *node_2 = Get_Power(str);
+        Skip_Spaces(onegin);
+
+        tree_node *node_2 = Get_Power(onegin);
 
         Tree_Dump_Node(node_2);
 
@@ -73,17 +81,21 @@ tree_node * Get_Mul_Or_Div(char **str)
 
 //-------------------------------------------------------------------------------//
 
-tree_node * Get_Power(char **str)
+tree_node * Get_Power(Text_Info * onegin)
 {
-    tree_node *node_1 = Get_Func(str);
+    tree_node *node_1 = Get_Func(onegin);
+    Skip_Spaces(onegin);
 
-    while (**str == '^')
+    while (**onegin->pointers == '^')
     {
         Tree_Dump_Node(node_1);
 
-        (*str)++;
+        (*onegin->pointers)++;
+        onegin->char_num++;
 
-        tree_node *node_2 = Get_Func(str);
+        Skip_Spaces(onegin);
+
+        tree_node *node_2 = Get_Func(onegin);
 
         Tree_Dump_Node(node_2);
 
@@ -95,13 +107,13 @@ tree_node * Get_Power(char **str)
 
 //-------------------------------------------------------------------------------//
 
-tree_node * Get_Func(char **str)
+tree_node * Get_Func(Text_Info * onegin)
 {
-    int op = Is_Func(str);
+    int op = Is_Func(onegin);
 
     if (op)
     {
-        tree_node *node = Get_Petrovich(str);
+        tree_node *node = Get_Petrovich(onegin);
 
         switch(op)
         {
@@ -118,34 +130,38 @@ tree_node * Get_Func(char **str)
         }
     }
 
-    return Get_Petrovich(str);
+    return Get_Petrovich(onegin);
 }
 
 //-------------------------------------------------------------------------------//
 
-int Is_Func(char **str)
+int Is_Func(Text_Info * onegin)
 {
-    if (**str == 's' && *(*str + 1) == 'i' && *(*str + 2) == 'n' && *(*str + 3) == '(')
+    if (**onegin->pointers == 's' && *(*onegin->pointers + 1) == 'i' && *(*onegin->pointers + 2) == 'n' && *(*onegin->pointers + 3) == '(')
     {
-        *str += 3;
+        *onegin->pointers += 3;
+        onegin->char_num += 3;
         return Op_Sin;
     }
 
-    else if (**str == 'c' && *(*str + 1) == 'o' && *(*str + 2) == 's' && *(*str + 3) == '(')
+    else if (**onegin->pointers == 'c' && *(*onegin->pointers + 1) == 'o' && *(*onegin->pointers + 2) == 's' && *(*onegin->pointers + 3) == '(')
     {
-        *str += 3;
+        *onegin->pointers += 3;
+        onegin->char_num +=3 ;
         return Op_Cos;
     }
 
-    else if (**str == 'l' && *(*str + 1) == 'n' && *(*str + 2) == '(')
+    else if (**onegin->pointers == 'l' && *(*onegin->pointers + 1) == 'n' && *(*onegin->pointers + 2) == '(')
     {
-        *str += 2;
+        *onegin->pointers += 2;
+        onegin->char_num += 2;
         return Op_Ln;
     }
 
-    else if (**str == 'e' && *(*str + 1) == 'x' && *(*str + 2) == 'p' && *(*str + 3) == '(')
+    else if (**onegin->pointers == 'e' && *(*onegin->pointers + 1) == 'x' && *(*onegin->pointers + 2) == 'p' && *(*onegin->pointers + 3) == '(')
     {
-        *str += 3;
+        *onegin->pointers += 3;
+        onegin->char_num += 3;
         return Op_Exp;
     }
 
@@ -155,62 +171,73 @@ int Is_Func(char **str)
 
 //-------------------------------------------------------------------------------//
 
-tree_node * Get_Petrovich(char **str)
+tree_node * Get_Petrovich(Text_Info * onegin)
 {
     tree_node *node_1 = nullptr;
 
-    if (**str == '(')
+    if (**onegin->pointers == '(')
     {
-        (*str)++;
-        node_1 = Get_Add_Or_Sub(str);
-        assert(**str == ')');
-        (*str)++;
+        (*onegin->pointers)++;
+        onegin->char_num++;
+
+        node_1 = Get_Add_Or_Sub(onegin);
+        assert(**onegin->pointers == ')');
+
+        (*onegin->pointers)++;
+        onegin->char_num++;
     }
 
     else
-        node_1 = Get_Var(str);
+        node_1 = Get_Var(onegin);
     
     return node_1;
 }
 
 //-------------------------------------------------------------------------------//
 
-tree_node * Get_Var(char **str)
+tree_node * Get_Var(Text_Info * onegin)
 {
+    if (**onegin->pointers == '\0')
+    {
+        // printf("%s\n", *onegin->pointers);
+        if (onegin->char_num != onegin->symbols_count)
+        {
+            onegin->pointers++;        
+            onegin->char_num++;
+            // printf("%s\n", *onegin->pointers);
+        }
+        else
+            return nullptr;
+    }
+
     char *var = (char *)calloc (Max_Size, sizeof(char));
     
-    sscanf(*str, "%s", var);
+    sscanf(*onegin->pointers, "%s", var);
+    // printf("%s\n", var);
+    // printf("%d\n", strlen(var));
     if (var[strlen(var) - 1] == ')')
         var[strlen(var) - 1] = '\0';
 
-    int type = New_Is_Var(var);
+    int type = Is_Var(var);
 
     if (type == Var_Type)
     {
-        (*str)+=strlen(var);
-        if (**str == ' ')
-            (*str)++;
-        printf("%s\n", var);
+        (*onegin->pointers)+=strlen(var);
+        onegin->char_num += strlen(var);
+        while (**onegin->pointers == ' ')
+        {
+            (*onegin->pointers)++;
+            onegin->char_num++;
+        }
         return New_Var_New(var);
     }
 
-    return Get_Number(str);
+    return Get_Number(onegin);
 }
 
 //-------------------------------------------------------------------------------//
 
-int Is_Var(char **str)
-{
-    if (**str == 'x')
-    {
-        (*str)++;
-        return Var_X;
-    }
-
-    return No_Error;
-}
-
-int New_Is_Var(char *var)
+int Is_Var(char *var)
 {
     int is_var = Var_Type;
 
@@ -228,23 +255,58 @@ int New_Is_Var(char *var)
 
 //-------------------------------------------------------------------------------//
 
-tree_node * Get_Number(char **str)
+tree_node * Get_Number(Text_Info * onegin)
 {
     int value = 0;
     int len = 0;
 
-    sscanf(*str, "%d%n", &value, &len);
+    sscanf(*onegin->pointers, "%d%n", &value, &len);
     assert(len);
 
-    *str += len;
+    *onegin->pointers += len;
+    onegin->char_num += len;
 
     return New_Num(value);
 }
 
 //-------------------------------------------------------------------------------//
 
-void Skip_Spaces(char **str)
+void Skip_Spaces(Text_Info * onegin)
 {
-    while (**str == ' ')
-        (*str)++;
+    while (isspace(**onegin->pointers))
+    {
+        (*onegin->pointers)++;
+        onegin->char_num++;
+    }
+}
+
+tree_node * Get_Assignment(Text_Info * onegin)
+{
+    tree_node *node_1 = Get_Var(onegin);
+    Skip_Spaces(onegin);
+
+    while (**onegin->pointers == '=')
+    {
+        assert(node_1->type == Var_Type);
+        Tree_Dump_Node(node_1);
+
+        (*onegin->pointers)++;
+        onegin->char_num++;
+        
+        Skip_Spaces(onegin);
+
+        tree_node *node_2 = Get_Add_Or_Sub(onegin);
+
+        Tree_Dump_Node(node_2);
+
+        //node_1->data = Eval(node_2);
+
+        node_1 = EQUAL(node_1, node_2);
+
+        node_1 = New_Connect_Type(node_1, Get_Assignment(onegin));
+
+        Tree_Dump_Node(node_1);
+    }
+
+    return node_1;
 }

@@ -154,4 +154,6 @@ int Tree_Dtor(tree_s * const my_tree);
 
 int Check_Cmdline_Arg(int args);
 
+int Eval(tree_node * const cur_node);
+
 #endif

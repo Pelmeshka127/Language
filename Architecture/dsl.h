@@ -56,3 +56,9 @@
 
 #define New_Var_New(var)    \
     Tree_New_Node(Var_Type, 0, var)
+
+#define EQUAL(left, right)  \
+    Tree_New_Node(Op_Type, Op_Eql, nullptr, left, right)
+
+#define New_Connect_Type(left, right)   \
+    Tree_New_Node(Connect_Type, 0, nullptr, left, right)

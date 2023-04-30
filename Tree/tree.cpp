@@ -83,6 +83,8 @@ int Tree_Download(tree_s * const my_tree, char * file_name)
         return File_Error;
     }
 
+    onegin.char_num = 0;
+
     if (fclose(input_file) == EOF)
     {
         fprintf(stderr, "Failed clothing the source file in function %s\n", __PRETTY_FUNCTION__);
@@ -96,7 +98,7 @@ int Tree_Download(tree_s * const my_tree, char * file_name)
     // }
     //printf("%c\n", onegin.buffer[1]);
 
-    my_tree->root = Get_General(onegin.pointers); //Adding recursive decsent
+    my_tree->root = Get_General(&onegin); //Adding recursive decsent
 
     Onegin_Dtor(&onegin);
 
@@ -198,6 +200,8 @@ int Tree_Get_Number_By_Operator(char * operation)
         return Op_Cos;
     else if (strcmp("exp", operation) == 0)
         return Op_Exp;
+    else if (strcmp("=", operation) == 0)
+        return Op_Eql;
 
     else
         return Incorrect_Type;
@@ -225,6 +229,8 @@ int Tree_Get_Operator_By_Number(int operation, char * oper_symbol, unsigned long
         strncpy(oper_symbol, "ln", len);
     else if (operation == Op_Exp)
         strncpy(oper_symbol, "exp", len);
+    else if (operation == Op_Eql)
+        strncpy(oper_symbol, "=", len);
 
     else
     {
@@ -486,4 +492,27 @@ int Check_Cmdline_Arg(int args)
         return Cmdline_Error;
     }
     return No_Error;
+}
+
+int Eval(tree_node * const cur_node)
+{
+    if (cur_node->type == Num_Type)
+        return cur_node->data;
+
+    switch (cur_node->data)
+    {
+
+#       define DEF_CMD(name, number, code)     \
+            case number:                        \
+            code                                
+
+#       include "../Architecture/cmd.h"
+
+#       undef DEF_CMD
+
+        default:
+            fprintf(stderr, "Incorrect node type %d\n", cur_node->type);
+    }
+
+    return Incorrect_Node;
 }
