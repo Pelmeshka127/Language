@@ -1,2 +1,5 @@
-x = 3
-y = 4 + x
+x = 1
+
+if ( (x) ass (3) ) start_sex
+    x = 2
+end_sex

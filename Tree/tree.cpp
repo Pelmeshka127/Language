@@ -202,6 +202,18 @@ int Tree_Get_Number_By_Operator(char * operation)
         return Op_Exp;
     else if (strcmp("=", operation) == 0)
         return Op_Eql;
+    else if (strcmp("if", operation) == 0)
+        return Op_If;
+    else if (strcmp("<", operation) == 0)
+        return Op_Less;
+    else if (strcmp("<=", operation) == 0)
+        return Op_Less_Eq;
+    else if (strcmp(">", operation) == 0)
+        return Op_More;
+    else if (strcmp(">=", operation) == 0)
+        return Op_More_Eq;
+    else if (strcmp("==", operation) == 0)
+        return Op_ChecK;
 
     else
         return Incorrect_Type;
@@ -231,6 +243,22 @@ int Tree_Get_Operator_By_Number(int operation, char * oper_symbol, unsigned long
         strncpy(oper_symbol, "exp", len);
     else if (operation == Op_Eql)
         strncpy(oper_symbol, "=", len);
+    else if (operation == Op_If)
+        strncpy(oper_symbol, "if", len);
+    else if (operation == Op_And)
+        strncpy(oper_symbol, "and", len);
+    else if (operation == Op_Or)
+        strncpy(oper_symbol, "or", len);
+    else if (operation == Op_Less)
+        strncpy(oper_symbol, "<", len);
+    else if (operation == Op_Less_Eq)
+        strncpy(oper_symbol, "<=", len);
+    else if (operation == Op_More)
+        strncpy(oper_symbol, ">", len);
+    else if (operation == Op_More_Eq)
+        strncpy(oper_symbol, ">=", len);
+    else if (operation == Op_ChecK)
+        strncpy(oper_symbol, "==", len);
 
     else
     {

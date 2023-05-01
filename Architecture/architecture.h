@@ -35,6 +35,14 @@ enum Operation_Types {
     Op_Ln       = 8,
     Op_Exp      = 9,
     Op_Eql      = 10,
+    Op_If       = 11,
+    Op_And      = 12,
+    Op_Or       = 13,
+    Op_Less     = 14,
+    Op_Less_Eq  = 15,
+    Op_More     = 16,
+    Op_More_Eq  = 17,
+    Op_ChecK    = 18,
 };
 
 enum Var_Types {

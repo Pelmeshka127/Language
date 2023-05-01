@@ -14,8 +14,6 @@ int main(int argc, char ** argv)
 
     Tree_Download(&my_tree, argv[1]);
 
-    printf("%d\n", my_tree.root->right->left->left->data);
-
     Tree_Dtor(&my_tree);
 
     Close_Log_File();
