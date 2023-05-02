@@ -81,18 +81,22 @@ void Skip_Spaces(Text_Info *onegin);
 
 tree_node * Get_Assignment(Text_Info *onegin);
 
-tree_node * Get_If(Text_Info *onegin);
+tree_node * Get_Condition(Text_Info *onegin, char *condition_word);
 
 tree_node * Get_Type(Text_Info *onegin);
 
 void Move_Pointers(Text_Info *onegin);
-
-tree_node * Get_If_Body(Text_Info *onegin);
 
 int Is_Digit(char *word);
 
 tree_node * Get_Log_Operator(Text_Info *onegin);
 
 int Is_Log_Operation(char *operation);
+
+tree_node * Get_Exit(Text_Info *onegin, char *end_word);
+
+int Is_Key_Word(char *word);
+
+tree_node * Get_Body(Text_Info *onegin);
 
 #endif

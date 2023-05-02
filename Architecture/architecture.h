@@ -43,6 +43,9 @@ enum Operation_Types {
     Op_More     = 16,
     Op_More_Eq  = 17,
     Op_ChecK    = 18,
+    Op_Elif     = 19,
+    Op_Else     = 20,
+    Op_End      = 30,
 };
 
 enum Var_Types {
@@ -67,7 +70,7 @@ const int In_Order   = 2;
 
 const int Post_Order = 3;
 
-const int Oper_Len   = 5;
+const int Oper_Len   = 15;
 
 const int Max_Length = 40;
 

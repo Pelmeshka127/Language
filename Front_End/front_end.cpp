@@ -5,9 +5,26 @@
 
 tree_node * Get_General(Text_Info * onegin)
 {
+    if (strcmp(onegin->pointers[onegin->lines_count - 1], "i'm_cumming") != 0)
+    {
+        fprintf(stderr, "No finish word((\n");
+        return nullptr;
+    }
+
     tree_node *node = Get_Type(onegin);
 
+    // printf("%s\n", *onegin->pointers);
+    // printf("%c\n", **onegin->pointers);
+
     assert(**onegin->pointers == '\0');
+
+    assert(onegin->char_num == onegin->symbols_count);
+
+    if (onegin->char_num != onegin->symbols_count)
+    {
+        fprintf(stderr, "Error, other values of char\n");
+        return nullptr;
+    }
 
     // printf("%d\n", onegin->symbols_count);
     // printf("%d\n", onegin->char_num);
@@ -199,6 +216,9 @@ tree_node * Get_Var(Text_Info * onegin)
     if (var[strlen(var) - 1] == ')')
         var[strlen(var) - 1] = '\0';
 
+    if (Is_Key_Word(var))
+        return nullptr;
+
     int type = Is_Var(var);
 
     if (type == Var_Type)
@@ -212,8 +232,10 @@ tree_node * Get_Var(Text_Info * onegin)
         return New_Var_New(var);
     }
 
-    if (Is_Digit(var))
-        return Get_Number(onegin);
+    return Get_Number(onegin);
+
+    // if (Is_Digit(var))
+    //     return Get_Number(onegin);
 
     return nullptr;
 }
@@ -283,8 +305,6 @@ tree_node * Get_Assignment(Text_Info * onegin)
 
         Tree_Dump_Node(node_2);
 
-        //node_1->data = Eval(node_2);
-
         node_1 = EQUAL(node_1, node_2);
 
         node_1 = New_Connect_Type(node_1, Get_Type(onegin));
@@ -297,41 +317,52 @@ tree_node * Get_Assignment(Text_Info * onegin)
 
 //-------------------------------------------------------------------------------//
 
-tree_node * Get_If(Text_Info * onegin)
+tree_node * Get_Condition(Text_Info * onegin, char *condition_word)
 {
-    while (**onegin->pointers != '(')
-        Move_Pointers(onegin);
-    
-    Move_Pointers(onegin);
-
-    tree_node *node_1 = Get_Add_Or_Sub(onegin);
+    tree_node *node_1 = nullptr;
     tree_node *node_2 = nullptr;
+
+    if (strcmp(condition_word, "else") != 0)
+    {
+        while (**onegin->pointers != '(')
+            Move_Pointers(onegin);
+    
+        Move_Pointers(onegin);
+
+        node_1 = Get_Add_Or_Sub(onegin);
+    }
+
+    else
+    {
+        (*onegin->pointers) += strlen(condition_word);
+        onegin->char_num += strlen(condition_word);
+    }
 
     while (!(isalpha(**onegin->pointers)))
         Move_Pointers(onegin);
 
-    char word[Max_Length] = "";
-
-    sscanf(*onegin->pointers, "%s", word);
-
-    if (strcmp(word, "start_sex") == 0)
-    {
-        (*onegin->pointers)+=strlen(word);
-        onegin->char_num+=strlen(word);
-        node_2 = Get_If_Body(onegin);
-    }
-
-    sscanf(*onegin->pointers, "%s", word);
-
-    if (strcmp(word, "end_sex") == 0)
-    {
-        (*onegin->pointers)+=strlen(word);
-        onegin->char_num+=strlen(word);
-        return IF(node_1, node_2);
-    }
-
-    else
+    node_2 = Get_Body(onegin);
+    if (node_2 == nullptr)
         return nullptr;
+
+    node_1 = Tree_New_Node(Op_Type, Tree_Get_Number_By_Operator(condition_word), condition_word, node_1, node_2);
+
+    Tree_Dump_Node(node_1);
+
+    Skip_Spaces(onegin);
+
+    char word[Max_Size] = "";
+    sscanf(*onegin->pointers, "%s", word);
+
+    tree_node *node_continue = nullptr;
+
+    if (strcmp(word, "elif") == 0 || strcmp(word, "else") == 0)
+    {
+        node_continue = Get_Condition(onegin, word);
+        node_1 = New_Connect_Type(node_1, node_continue);
+    }
+
+    return New_Connect_Type(node_1, Get_Type(onegin));
 }
 
 //-------------------------------------------------------------------------------//
@@ -348,17 +379,20 @@ tree_node * Get_Type(Text_Info * onegin)
             return nullptr;
     }
 
-    char *tokens = *onegin->pointers;
+    Skip_Spaces(onegin);
 
+    char *tokens = *onegin->pointers;
     char word[Max_Size] = "";
     
     sscanf(tokens, "%s", word);
-    // printf("%s\n", tokens);
 
     if (strcmp(word, "if") == 0 && strchr(tokens, '(') != nullptr && strchr(tokens, ')') != nullptr)
     {
-        return Get_If(onegin);
+        return Get_Condition(onegin, word);
     }
+
+    else if (strcmp(word, "i'm_cumming") == 0)
+        return Get_Exit(onegin, word);
 
     else
         return Get_Assignment(onegin);
@@ -371,17 +405,6 @@ void Move_Pointers(Text_Info * onegin)
 {
     (*onegin->pointers)++;
     onegin->char_num++;
-}
-
-//-------------------------------------------------------------------------------//
-
-tree_node * Get_If_Body(Text_Info * onegin)
-{   
-    Move_Pointers(onegin);
-
-    tree_node *body = Get_Type(onegin);
-
-    return body;
 }
 
 //-------------------------------------------------------------------------------//
@@ -409,8 +432,6 @@ tree_node * Get_Log_Operator(Text_Info *onegin)
     char operation[Max_Size] = "";
     sscanf(*onegin->pointers, "%s", operation);
 
-    printf("%s\n", operation);
-
     int log_op = Is_Log_Operation(operation);
     if (log_op)
     {
@@ -435,15 +456,15 @@ tree_node * Get_Log_Operator(Text_Info *onegin)
 
 int Is_Log_Operation(char *operation)
 {
-    if (strcmp("<", operation) == 0)
+    if (strcmp("small_dick", operation) == 0)
         return Op_Less;
-    else if (strcmp("<=", operation) == 0)
+    else if (strcmp("nice_small_dick", operation) == 0)
         return Op_Less_Eq;
-    else if (strcmp(">", operation) == 0)
+    else if (strcmp("big_dick", operation) == 0)
         return Op_More;
-    else if (strcmp(">=", operation) == 0)
+    else if (strcmp("nice_big_dick", operation) == 0)
         return Op_More_Eq;
-    else if (strcmp("==", operation) == 0)
+    else if (strcmp("nice_dick", operation) == 0)
         return Op_ChecK;
     else if (strcmp("ass", operation) == 0)
         return Op_And;
@@ -453,5 +474,69 @@ int Is_Log_Operation(char *operation)
     else
         return 0;
 }
+
+//-------------------------------------------------------------------------------//
+
+tree_node * Get_Exit(Text_Info *onegin, char *end_word)
+{
+    Skip_Spaces(onegin);
+
+    (*onegin->pointers)+=strlen(end_word);
+    onegin->char_num+=strlen(end_word);
+
+    return Tree_New_Node(Op_Type, Op_End, "exit()", nullptr, nullptr);
+}
+
+//-------------------------------------------------------------------------------//
+
+int Is_Key_Word(char *word)
+{
+    if (strcasecmp(word, "start_sex") == 0)
+        return 1;
+    else if (strcasecmp(word, "end_sex") == 0)
+        return 1;
+
+    else
+        return 0;
+}
+
+//-------------------------------------------------------------------------------//
+
+tree_node * Get_Body(Text_Info *onegin)
+{   
+    char word[Max_Size] = "";
+    sscanf(*onegin->pointers, "%s", word);
+
+    tree_node *node = nullptr;
+
+    if (strcmp(word, "start_sex") == 0)
+    {
+        (*onegin->pointers) += strlen(word);
+        onegin->char_num += strlen(word);
+
+        Skip_Spaces(onegin);
+
+        node = Get_Type(onegin);
+
+        sscanf(*onegin->pointers, "%s", word);
+
+        if (strcmp(word, "end_sex") == 0)
+        {
+            (*onegin->pointers) += strlen(word);
+            onegin->char_num += strlen(word);
+        }
+
+        else
+        {
+            fprintf(stderr, "No end_sex!!!! in %s\n", *onegin->pointers);
+            return nullptr;
+        }
+    }   
+
+    else
+        fprintf(stderr, "%s:It's not a body((( of condition\n", *onegin->pointers);
+
+    return node;
+}   
 
 //-------------------------------------------------------------------------------//

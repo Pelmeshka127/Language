@@ -99,6 +99,12 @@ int Tree_Download(tree_s * const my_tree, char * file_name)
     //printf("%c\n", onegin.buffer[1]);
 
     my_tree->root = Get_General(&onegin); //Adding recursive decsent
+    if (my_tree->root == nullptr)
+    {
+        fprintf(stderr, "Error in reading src file\n");
+        Onegin_Dtor(&onegin);
+        return File_Error;
+    }
 
     Onegin_Dtor(&onegin);
 
@@ -214,6 +220,12 @@ int Tree_Get_Number_By_Operator(char * operation)
         return Op_More_Eq;
     else if (strcmp("==", operation) == 0)
         return Op_ChecK;
+    else if (strcmp("exit()", operation) == 0)
+        return Op_End;
+    else if (strcmp("elif", operation) == 0)
+        return Op_Elif;
+    else if (strcmp("else", operation) == 0)
+        return Op_Else;
 
     else
         return Incorrect_Type;
@@ -250,15 +262,21 @@ int Tree_Get_Operator_By_Number(int operation, char * oper_symbol, unsigned long
     else if (operation == Op_Or)
         strncpy(oper_symbol, "or", len);
     else if (operation == Op_Less)
-        strncpy(oper_symbol, "<", len);
+        strncpy(oper_symbol, "less", len);
     else if (operation == Op_Less_Eq)
-        strncpy(oper_symbol, "<=", len);
+        strncpy(oper_symbol, "less_equal", len);
     else if (operation == Op_More)
-        strncpy(oper_symbol, ">", len);
+        strncpy(oper_symbol, "more", len);
     else if (operation == Op_More_Eq)
-        strncpy(oper_symbol, ">=", len);
+        strncpy(oper_symbol, "more_equal", len);
     else if (operation == Op_ChecK)
         strncpy(oper_symbol, "==", len);
+    else if (operation == Op_End)
+        strncpy(oper_symbol, "exit()", len);
+    else if (operation == Op_Elif)
+        strncpy(oper_symbol, "elif", len);
+    else if (operation == Op_Else)
+        strncpy(oper_symbol, "else", len);
 
     else
     {
@@ -480,7 +498,8 @@ int Tree_Is_There_Variables(tree_node * const cur_node)
 
 int Tree_Clean(tree_node ** root)
 {
-    assert(root);
+    if (*root == nullptr)
+        return No_Error;
 
     if ((*root)->left != nullptr)
         Tree_Clean(&(*root)->left);

@@ -101,7 +101,7 @@ void Tree_Draw(tree_node * const root)
                             "   label = \" <value> %s | var_data =  %d\"];\n", root, root->name, root->data);
 
     else if (root->type == Connect_Type)
-        fprintf(graph_file, "   \"%p\"[shape = Mrecord, style = filled, fillcolor = \"pink1\","
+        fprintf(graph_file, "   \"%p\"[shape = Mrecord, style = filled, fillcolor = \"blanchedalmond\","
                             "   label = \" <value> Connect_Node\"];\n", root);
     
     if (root->left != nullptr)
