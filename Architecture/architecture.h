@@ -45,6 +45,8 @@ enum Operation_Types {
     Op_ChecK    = 18,
     Op_Elif     = 19,
     Op_Else     = 20,
+    Op_Not_Check= 21,
+    Op_While    = 22,
     Op_End      = 30,
 };
 

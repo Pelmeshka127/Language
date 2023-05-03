@@ -1,21 +1,7 @@
-x = 4
+x = 0
 
-if (x nice_dick 4) start_sex
-
-    x = 2
-
+horny (x pussy 5) start_sex
+    x = x + 1
 end_sex
 
-elif (x oral_sex 3) start_sex
-
-    x = 3
-
-end_sex
-
-else start_sex
-
-    x = 12
-
-end_sex
-
-i'm_cumming
+cumming

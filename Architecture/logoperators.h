@@ -1,0 +1,15 @@
+LOG_OP(SMALL_DICK, Op_Less)
+
+LOG_OP(NICE_SMALL_DICK, Op_Less_Eq)
+
+LOG_OP(BIG_DICK, Op_More)
+
+LOG_OP(NICE_BIG_DICK, Op_More_Eq)
+
+LOG_OP(NICE_DICK, Op_ChecK)
+
+LOG_OP(ASS, Op_And)
+
+LOG_OP(ORAL_SEX, Op_Or)
+
+LOG_OP(PUSSY, Op_Not_Check)

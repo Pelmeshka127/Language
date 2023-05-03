@@ -63,5 +63,5 @@
 #define New_Connect_Type(left, right)   \
     Tree_New_Node(Connect_Type, 0, nullptr, left, right)
 
-#define IF(condition, body) \
-    Tree_New_Node(Op_Type, Op_If, "if", condition, body)
+#define WHILE_NODE(condition, body)  \
+    Tree_New_Node(Op_Type, Op_While, "while", condition, body)

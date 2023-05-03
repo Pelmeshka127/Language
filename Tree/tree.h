@@ -58,15 +58,6 @@ int Tree_Download(tree_s * const my_tree, char * file_name);
 
 //-------------------------------------------------------------------------------//
 
-/// @brief Function reads tree from the source text file
-/// @param onegin is ptr on parser struct
-/// @param my_tree is ptr on the tree struct
-/// @param cur_node is pointer on the cuuren t node that is red
-/// @return File_Error if there's error, No_Error if it's ok
-int Tree_Reader(Text_Info * const onegin, tree_s * const my_tree, tree_node ** cur_node);
-
-//-------------------------------------------------------------------------------//
-
 /// @brief Function finds out the operation code by it's symbol
 /// @param operation is ptr the operaton symbol
 /// @return code of the operation
@@ -78,20 +69,6 @@ int Tree_Get_Number_By_Operator(char * operation);
 /// @param operation is code of the opearation
 /// @return the symbol of the operation
 int Tree_Get_Operator_By_Number(int operation, char * oper_symbol, unsigned long len);
-
-//-------------------------------------------------------------------------------//
-
-/// @brief Function gets code of variable by it's symbol
-/// @param variable is symbol of the variable
-/// @return the code of the variable
-int Tree_Get_Number_By_Variable(char * variable);
-
-//-------------------------------------------------------------------------------//
-
-/// @brief Function gets the symbol of the variable by it's code
-/// @param variable is the code of the variable
-/// @return the symbol of the variable
-char Tree_Get_Variable_By_Number(int variable);
 
 //-------------------------------------------------------------------------------//
 
