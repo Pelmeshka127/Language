@@ -6,6 +6,7 @@
         "bitset": "cpp",
         "chrono": "cpp",
         "unordered_map": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "ios": "cpp"
     }
 }

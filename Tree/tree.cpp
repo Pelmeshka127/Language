@@ -1,7 +1,7 @@
 #include "tree.h"
 #include "dump.h"
 #include "../Front_End/lexer.h"
-#include "../Front_End/front_end.h"
+#include "../Front_End/frontend.h"
 
 //-------------------------------------------------------------------------------//
 
@@ -92,12 +92,12 @@ int Tree_Download(tree_s * const my_tree, char * file_name)
 
     token_s tokens = {};
 
-    Token_Ctor(&tokens, &onegin);
+    Tokenizer(&tokens, &onegin);
 
-    for (int i = 0; i < tokens.capacity; i++)
-        printf("%s\n", tokens.array[i].name);
+    // for (int i = 0; i < tokens.capacity; i++)
+    //     printf("%s\n", tokens.array[i].name);
 
-    my_tree->root = Get_General(&onegin); //Adding recursive decsent
+    my_tree->root = Get_General(&tokens); //Adding recursive decsent
     if (my_tree->root == nullptr)
     {
         fprintf(stderr, "Error in reading src file\n");
@@ -157,6 +157,10 @@ int Tree_Get_Number_By_Operator(char * operation)
         return Op_Not_Eql;
     else if (strcmp("while", operation) == 0)
         return Op_While;
+    else if (strcmp("input", operation) == 0)
+        return Op_Input;
+    else if (strcmp("print", operation) == 0)
+        return Op_Print;
 
     else
         return Incorrect_Type;
@@ -212,6 +216,10 @@ int Tree_Get_Operator_By_Number(int operation, char * oper_symbol, unsigned long
         strncpy(oper_symbol, "!=", len);
     else if (operation == Op_While)
         strncpy(oper_symbol, "while", len);
+    else if (operation == Op_Input)
+        strncpy(oper_symbol, "input", len);
+    else if (operation == Op_Print)
+        strncpy(oper_symbol, "print", len);
 
     else
     {

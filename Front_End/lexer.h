@@ -27,15 +27,15 @@ int Tokenizer(token_s *const tokens, Text_Info * const onegin);
 
 int Token_Dtor(token_s *tokens);
 
-// //-------------------------------------------------------------------------------//
+//-------------------------------------------------------------------------------//
 
-// void Skip_Spaces(Text_Info *const onegin);
+void Skip_Spaces(Text_Info *const onegin);
 
-// //-------------------------------------------------------------------------------//
+//-------------------------------------------------------------------------------//
 
-// void Move_Pointers(Text_Info *const onegin);
+void Move_Pointers(Text_Info *const onegin);
 
-// //-------------------------------------------------------------------------------//
+//-------------------------------------------------------------------------------//
 
 int Token_Create_Number(token_s *const tokens, Text_Info *const onegin, int count);
 

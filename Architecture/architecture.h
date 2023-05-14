@@ -49,6 +49,10 @@ enum Operation_Types {
     Op_While    = 22,
     Op_Start_Sex = 23,
     Op_End_Sex   = 24,
+    Op_Left_Br  = 25,
+    Op_Right_Br = 26,
+    Op_Input    = 27,
+    Op_Print    = 28,
     Op_End      = 30,
 };
 

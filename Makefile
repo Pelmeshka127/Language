@@ -18,8 +18,8 @@ FLAGS = -D _DEBUG -ggdb3 -std=c++17 -O0 -Wall -Wextra -Weffc++\
 			   -fsanitize=float-divide-by-zero,integer-divide-by-zero,nonnull-attribute,null,\
 			   -fsanitize=address,signed-integer-overflow,undefined,unreachable,vla-bound,vptr,
 
-difftask: main.o tree.o dump.o parser.o front_end.o translator.o lexer.o
-	g++ obj/main.o obj/tree.o obj/dump.o obj/parser.o obj/front_end.o obj/translator.o obj/lexer.o $(FLAGS) -o diff
+difftask: main.o tree.o dump.o parser.o frontend.o translator.o lexer.o
+	g++ obj/main.o obj/tree.o obj/dump.o obj/parser.o obj/frontend.o obj/translator.o obj/lexer.o $(FLAGS) -o diff
 
 main.o: ./main.cpp
 	g++ -c ./main.cpp $(FLAGS) -o obj/main.o
@@ -33,8 +33,11 @@ dump.o: ./Tree/dump.cpp
 parser.o: ./Parsering/parser.cpp
 	g++ -c ./Parsering/parser.cpp $(FLAGS) -o obj/parser.o
 
-front_end.o: ./Front_End/front_end.cpp
-	g++ -c ./Front_End/front_end.cpp $(FLAGS) -o obj/front_end.o
+# front_end.o: ./Front_End/front_end.cpp
+# 	g++ -c ./Front_End/front_end.cpp $(FLAGS) -o obj/front_end.o
+
+frontend.o: ./Front_End/frontend.cpp
+	g++ -c ./Front_End/frontend.cpp $(FLAGS) -o obj/frontend.o
 
 translator.o: ./Translator/translator.cpp
 	g++ -c ./Translator/translator.cpp $(FLAGS) -o obj/translator.o

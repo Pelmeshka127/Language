@@ -51,10 +51,7 @@
 #define New_Num(data) \
     Tree_New_Node(Num_Type, data)
 
-#define New_Var(data)  \
-    Tree_New_Node(Var_Type, data)
-
-#define New_Var_New(var)    \
+#define New_Var(var)    \
     Tree_New_Node(Var_Type, 0, var)
 
 #define ASSIGNMENT(left, right)  \
@@ -65,3 +62,9 @@
 
 #define WHILE_NODE(condition, body)  \
     Tree_New_Node(Op_Type, Op_While, "while", condition, body)
+
+#define TOKEN_TYPE(token_type)    \
+    tokens->array[tokens->size].type == token_type
+
+#define TOKEN_DATA  \
+    tokens->array[tokens->size].data

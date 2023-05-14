@@ -1,7 +1,11 @@
-x = sin(3)
+x = 0
 
-if (x pussy 5) start_sex
+fisting_anal(x)
+
+horny (x pussy 10) start_sex
     x = x + 1
 end_sex
+
+suck_dick(x)
 
 cumming

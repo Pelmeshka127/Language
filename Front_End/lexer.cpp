@@ -11,13 +11,14 @@ int Tokenizer(token_s *const tokens, Text_Info *const onegin)
     for (int i = 0; i < onegin->symbols_count; i++)
     {
         if (onegin->buffer[i] == '\0')
-        {
             onegin->buffer[i] = '\n';
-        }
     }
 
     while (true)
     {
+        if (**onegin->pointers == '\0')
+            break;
+
         if ((**onegin->pointers >= '0' && **onegin->pointers <= '9') || (**onegin->pointers == '-' && *(*onegin->pointers + 1) >= '0' && *(*onegin->pointers + 1) <= '9'))
         {
             tokens->array[tokens->capacity].name = (char *)calloc (Max_Size, sizeof(char));
@@ -41,6 +42,20 @@ int Tokenizer(token_s *const tokens, Text_Info *const onegin)
 
             #undef DEF_CMD
 
+        else if (**onegin->pointers == '(' || **onegin->pointers == ')')
+        {
+            tokens->array[tokens->capacity].type = Op_Type;
+            tokens->array[tokens->capacity].name = (char *)calloc (2, sizeof(char));
+            strncpy(tokens->array[tokens->capacity].name, *onegin->pointers, 1);
+            if (**onegin->pointers == '(')
+                tokens->array[tokens->capacity].data = Op_Left_Br;
+            else 
+                tokens->array[tokens->capacity].data = Op_Right_Br;
+            (*onegin->pointers)++;
+            tokens->capacity++;
+        }
+
+
         if (isalpha(**onegin->pointers))
         {
             tokens->array[tokens->capacity].name = (char *)calloc (Max_Size, sizeof(char));
@@ -48,10 +63,7 @@ int Tokenizer(token_s *const tokens, Text_Info *const onegin)
             tokens->capacity++;
         }
         
-        if (**onegin->pointers == '\0')
-            break;
-
-        (*onegin->pointers)++;
+        Skip_Spaces(onegin);
     }
 
     (*onegin->pointers) -= onegin->symbols_count; // !!!!!!
@@ -59,25 +71,25 @@ int Tokenizer(token_s *const tokens, Text_Info *const onegin)
     return No_Error;
 }
 
-// //-------------------------------------------------------------------------------//
+//-------------------------------------------------------------------------------//
 
-// void Skip_Spaces(Text_Info *const onegin)
-// {
-//     while (isspace(**onegin->pointers) || **onegin->pointers == '\0')
-//     {
-//         Move_Pointers(onegin);
-//     }
-// }
+void Skip_Spaces(Text_Info *const onegin)
+{
+    while (isspace(**onegin->pointers))
+    {
+        Move_Pointers(onegin);
+    }
+}
 
-// //-------------------------------------------------------------------------------//
+//-------------------------------------------------------------------------------//
 
-// void Move_Pointers(Text_Info *const onegin)
-// {
-//     (*onegin->pointers)++;
-//     onegin->char_num++;
-// }
+void Move_Pointers(Text_Info *const onegin)
+{
+    (*onegin->pointers)++;
+    //onegin->char_num++;
+}
 
-// //-------------------------------------------------------------------------------//
+//-------------------------------------------------------------------------------//
 
 int Token_Dtor(token_s *tokens)
 {

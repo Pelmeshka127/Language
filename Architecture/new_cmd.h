@@ -36,13 +36,17 @@ DEF_CMD(ELIF, Op_Elif, 4, {})
 
 DEF_CMD(ELSE, Op_Else, 4, {})
 
-DEF_CMD(WHILE, Op_While, 5, {})
+DEF_CMD(HORNY, Op_While, 5, {})
 
 DEF_CMD(CUMMING, Op_End, 7, {})
 
 DEF_CMD(START_SEX, Op_Start_Sex, 9, {})
 
 DEF_CMD(END_SEX, Op_End_Sex, 7, {})
+
+DEF_CMD(FISTING_ANAL, Op_Input, 12, {})
+
+DEF_CMD(SUCK_DICK, Op_Print, 9, {})
 
 DEF_CMD(+, Op_Add, 1,
 {
