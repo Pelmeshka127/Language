@@ -1,9 +1,10 @@
 #include "front_end.h"
+#include "lexer.h"
 #include <ctype.h>
 
 //-------------------------------------------------------------------------------//
 
-tree_node * Get_General(Text_Info * onegin)
+tree_node * Get_General(Text_Info *onegin)
 {
     if (strcmp(onegin->pointers[onegin->lines_count - 1], "cumming") != 0)
     {
@@ -202,7 +203,7 @@ tree_node * Get_Assignment(Text_Info * onegin)
 
         Tree_Dump_Node(node_2);
 
-        node_1 = EQUAL(node_1, node_2);
+        node_1 = ASSIGNMENT(node_1, node_2);
 
         node_1 = New_Connect_Type(node_1, Get_Type(onegin));
 
@@ -315,8 +316,8 @@ tree_node * Get_Log_Operator(Text_Info *onegin)
     {
         Tree_Dump_Node(node_1);
 
-        (*onegin->pointers)+=strlen(operation);
-        onegin->char_num+=strlen(operation);
+        (*onegin->pointers) += strlen(operation);
+        onegin->char_num += strlen(operation);
 
         Skip_Spaces(onegin);
 
@@ -487,21 +488,11 @@ tree_node * Get_Number(Text_Info * onegin)
 
 //-------------------------------------------------------------------------------//
 
-void Skip_Spaces(Text_Info * onegin)
-{
-    while (isspace(**onegin->pointers) || **onegin->pointers == '\0')
-    {
-        Move_Pointers(onegin);
-    }
-}
-
-//-------------------------------------------------------------------------------//
-
-void Move_Pointers(Text_Info * onegin)
-{
-    (*onegin->pointers)++;
-    onegin->char_num++;
-}
+// void Move_Pointers(Text_Info * onegin)
+// {
+//     (*onegin->pointers)++;
+//     onegin->char_num++;
+// }
 
 //-------------------------------------------------------------------------------//
 

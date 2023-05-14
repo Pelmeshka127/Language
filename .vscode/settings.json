@@ -1,6 +1,11 @@
 {
     "files.associations": {
         "sstream": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "__bit_reference": "cpp",
+        "bitset": "cpp",
+        "chrono": "cpp",
+        "unordered_map": "cpp",
+        "algorithm": "cpp"
     }
 }

@@ -1,5 +1,6 @@
 #include "tree.h"
 #include "dump.h"
+#include "../Front_End/lexer.h"
 #include "../Front_End/front_end.h"
 
 //-------------------------------------------------------------------------------//
@@ -19,7 +20,7 @@ int Tree_Ctor(tree_s * const my_tree)
  
 //-------------------------------------------------------------------------------//
 
-tree_node * Tree_New_Node(type_t type, data_t data, char *name, tree_node *left, tree_node *right)
+tree_node * Tree_New_Node(type_t type, data_t data, char* name, tree_node *left, tree_node *right)
 {
     tree_node * inserting_node = (tree_node *)calloc (1, sizeof(tree_node));
     if (inserting_node == nullptr)
@@ -83,13 +84,18 @@ int Tree_Download(tree_s * const my_tree, char * file_name)
         return File_Error;
     }
 
-    onegin.char_num = 0;
-
     if (fclose(input_file) == EOF)
     {
         fprintf(stderr, "Failed clothing the source file in function %s\n", __PRETTY_FUNCTION__);
         return File_Error;
     }
+
+    token_s tokens = {};
+
+    Token_Ctor(&tokens, &onegin);
+
+    for (int i = 0; i < tokens.capacity; i++)
+        printf("%s\n", tokens.array[i].name);
 
     my_tree->root = Get_General(&onegin); //Adding recursive decsent
     if (my_tree->root == nullptr)
@@ -100,6 +106,7 @@ int Tree_Download(tree_s * const my_tree, char * file_name)
     }
 
     Onegin_Dtor(&onegin);
+    Token_Dtor(&tokens);
 
     return No_Error;
 }
@@ -127,19 +134,19 @@ int Tree_Get_Number_By_Operator(char * operation)
     else if (strcmp("exp", operation) == 0)
         return Op_Exp;
     else if (strcmp("=", operation) == 0)
-        return Op_Eql;
+        return Op_Asg;
     else if (strcmp("if", operation) == 0)
         return Op_If;
     else if (strcmp("<", operation) == 0)
-        return Op_Less;
+        return Op_Below;
     else if (strcmp("<=", operation) == 0)
-        return Op_Less_Eq;
+        return Op_Below_Eq;
     else if (strcmp(">", operation) == 0)
-        return Op_More;
+        return Op_Above;
     else if (strcmp(">=", operation) == 0)
-        return Op_More_Eq;
+        return Op_Above_Eq;
     else if (strcmp("==", operation) == 0)
-        return Op_ChecK;
+        return Op_Eql;
     else if (strcmp("exit()", operation) == 0)
         return Op_End;
     else if (strcmp("elif", operation) == 0)
@@ -147,7 +154,7 @@ int Tree_Get_Number_By_Operator(char * operation)
     else if (strcmp("else", operation) == 0)
         return Op_Else;
     else if (strcmp("!=", operation) == 0)
-        return Op_Not_Check;
+        return Op_Not_Eql;
     else if (strcmp("while", operation) == 0)
         return Op_While;
 
@@ -177,7 +184,7 @@ int Tree_Get_Operator_By_Number(int operation, char * oper_symbol, unsigned long
         strncpy(oper_symbol, "ln", len);
     else if (operation == Op_Exp)
         strncpy(oper_symbol, "exp", len);
-    else if (operation == Op_Eql)
+    else if (operation == Op_Asg)
         strncpy(oper_symbol, "=", len);
     else if (operation == Op_If)
         strncpy(oper_symbol, "if", len);
@@ -185,15 +192,15 @@ int Tree_Get_Operator_By_Number(int operation, char * oper_symbol, unsigned long
         strncpy(oper_symbol, "and", len);
     else if (operation == Op_Or)
         strncpy(oper_symbol, "or", len);
-    else if (operation == Op_Less)
-        strncpy(oper_symbol, "less", len);
-    else if (operation == Op_Less_Eq)
-        strncpy(oper_symbol, "less_equal", len);
-    else if (operation == Op_More)
-        strncpy(oper_symbol, "more", len);
-    else if (operation == Op_More_Eq)
-        strncpy(oper_symbol, "more_equal", len);
-    else if (operation == Op_ChecK)
+    else if (operation == Op_Below)
+        strncpy(oper_symbol, "below", len);
+    else if (operation == Op_Below_Eq)
+        strncpy(oper_symbol, "below_equal", len);
+    else if (operation == Op_Above)
+        strncpy(oper_symbol, "above", len);
+    else if (operation == Op_Above_Eq)
+        strncpy(oper_symbol, "above_equal", len);
+    else if (operation == Op_Eql)
         strncpy(oper_symbol, "==", len);
     else if (operation == Op_End)
         strncpy(oper_symbol, "exit()", len);
@@ -201,7 +208,7 @@ int Tree_Get_Operator_By_Number(int operation, char * oper_symbol, unsigned long
         strncpy(oper_symbol, "elif", len);
     else if (operation == Op_Else)
         strncpy(oper_symbol, "else", len);
-    else if (operation == Op_Not_Check)
+    else if (operation == Op_Not_Eql)
         strncpy(oper_symbol, "!=", len);
     else if (operation == Op_While)
         strncpy(oper_symbol, "while", len);

@@ -1,6 +1,6 @@
-x = 0
+x = sin(3)
 
-horny (x pussy 5) start_sex
+if (x pussy 5) start_sex
     x = x + 1
 end_sex
 
