@@ -90,7 +90,7 @@ void Tree_Draw(tree_node * const root)
         char oper_symbol[Oper_Len] = "";
         Tree_Get_Operator_By_Number(root->data, oper_symbol, Oper_Len);
         fprintf(graph_file, "   \"%p\"[shape = Mrecord, style = filled, fillcolor = \"cornflowerblue\","
-                            "   label = \" <value> %s\"];\n", root, oper_symbol);
+                            "   label = \" <value> %s\"];\n", root, root->name);
     }
 
     else if (root->type == Num_Type)

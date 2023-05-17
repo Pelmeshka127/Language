@@ -2,7 +2,7 @@
 #define TRANSLATOR_H_
 
 #include "../Tree/tree.h"
-#include "../Front_End/front_end.h"
+#include "../Front_End/frontend.h"
 
 int Translator_Reader(tree_s *src_tree);
 

@@ -41,6 +41,9 @@ tree_node *Get_Type(token_s *const tokens)
     else if (TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_End)
         return Get_Exit(tokens);
 
+    else if (TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_Init)
+        return Get_Init_Var(tokens);
+
     else
     {
         fprintf(stderr, "Unknown token %s in >????\n", tokens->array[tokens->size].name);
@@ -60,11 +63,14 @@ tree_node *Get_Assignment(token_s *const tokens)
     {   
         assert(node_1->type == Var_Type);
 
+        char symbol[2] = "";
+        strncpy(symbol, tokens->array[tokens->size].name, 1);
+
         tokens->size++;
 
         tree_node *node_2 = Get_Add_Sub(tokens);
 
-        node_1 = ASSIGNMENT(node_1, node_2);
+        node_1 = ASSIGNMENT(node_1, node_2, symbol);
 
         node_1 = New_Connect_Type(node_1, Get_Type(tokens));
     }
@@ -82,13 +88,16 @@ tree_node *Get_While(token_s *const tokens)
 
     while (TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_While)
     {
+        char symbol[6] = "";
+        strncpy(symbol, tokens->array[tokens->size].name, strlen(tokens->array[tokens->size].name));
+
         tokens->size++;
 
         node_1 = Get_Petrovich(tokens);
 
         tree_node *node_2 = Get_Body(tokens);
 
-        node_1 = WHILE_NODE(node_1, node_2);
+        node_1 = WHILE_NODE(node_1, node_2, symbol);
 
         node_1 = New_Connect_Type(node_1, Get_Type(tokens));
     }
@@ -153,6 +162,37 @@ tree_node *Get_Body(token_s *const tokens)
 
 //-------------------------------------------------------------------------------//
 
+tree_node *Get_Init_Var(token_s *const tokens)
+{
+    assert(tokens);
+
+    tree_node *node_1 = nullptr;
+
+    while (TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_Init)
+    {
+        char symbol[5] = "";
+        strncpy(symbol, tokens->array[tokens->size].name, strlen(tokens->array[tokens->size].name));
+
+        tokens->size++;
+
+        node_1 = Get_Var(tokens);
+
+        assert(TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_Asg);
+
+        tokens->size++;
+
+        tree_node *node_2 = Get_Add_Sub(tokens);
+
+        node_1 = Tree_New_Node(Op_Type, Op_Init, symbol, node_1, node_2);
+
+        node_1 = New_Connect_Type(node_1, Get_Type(tokens));
+    }
+
+    return node_1;
+}
+
+//-------------------------------------------------------------------------------//
+
 tree_node *Get_Input(token_s *const tokens)
 {
     assert(tokens);
@@ -161,11 +201,14 @@ tree_node *Get_Input(token_s *const tokens)
 
     while (TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_Input)
     {
+        char symbol[14] = "";
+        strncpy(symbol, tokens->array[tokens->size].name, strlen(tokens->array[tokens->size].name));
+
         tokens->size++;
 
         node_1 = Get_Petrovich(tokens);
 
-        node_1 = Tree_New_Node(Op_Type, Op_Input, "input()", node_1, nullptr);
+        node_1 = Tree_New_Node(Op_Type, Op_Input, symbol, node_1, nullptr);
     }
 
     return New_Connect_Type(node_1, Get_Type(tokens));
@@ -181,11 +224,14 @@ tree_node *Get_Print(token_s *const tokens)
 
     while (TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_Print)
     {
+        char symbol[10] = "";
+        strncpy(symbol, tokens->array[tokens->size].name, strlen(tokens->array[tokens->size].name));
+        
         tokens->size++;
 
         node_1 = Get_Petrovich(tokens);
 
-        node_1 = Tree_New_Node(Op_Type, Op_Print, "print()", node_1, nullptr);
+        node_1 = Tree_New_Node(Op_Type, Op_Print, symbol, node_1, nullptr);
     }
 
     return New_Connect_Type(node_1, Get_Type(tokens));
@@ -201,9 +247,12 @@ tree_node *Get_Exit(token_s *const tokens)
 
     while (TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_End)
     {
+        char symbol[10] = "";
+        strncpy(symbol, tokens->array[tokens->size].name, strlen(tokens->array[tokens->size].name));
+
         tokens->size++;
 
-        node_1 = Tree_New_Node(Op_Type, Op_End, "exit()", nullptr, nullptr);
+        node_1 = Tree_New_Node(Op_Type, Op_End, symbol, nullptr, nullptr);
     }
 
     return node_1;
@@ -221,15 +270,18 @@ tree_node *Get_Add_Sub(token_s *const tokens)
     {
         int operation = TOKEN_DATA;
 
+        char symbol[2] = "";
+        strncpy(symbol, tokens->array[tokens->size].name, 1);
+
         tokens->size++;
 
         tree_node *node_2 = Get_Mul_Div(tokens);
 
         if (operation == Op_Add)
-            node_1 = ADD(node_1, node_2);
+            node_1 = ADD(node_1, node_2, symbol);
 
         else 
-            node_1 = SUB(node_1, node_2);
+            node_1 = SUB(node_1, node_2, symbol);
     }
 
     return node_1;
@@ -247,15 +299,18 @@ tree_node *Get_Mul_Div(token_s *const tokens)
     {
         int operation = TOKEN_DATA;
 
+        char symbol[2] = "";
+        strncpy(symbol, tokens->array[tokens->size].name, 1);
+
         tokens->size++;
 
         tree_node *node_2 = Get_Power(tokens);
 
         if (operation == Op_Mul)
-            node_1 = MUL(node_1, node_2);
+            node_1 = MUL(node_1, node_2, symbol);
 
         else
-            node_1 = DIV(node_1, node_2);
+            node_1 = DIV(node_1, node_2, symbol);
     }
 
     return node_1;
@@ -271,13 +326,14 @@ tree_node *Get_Power(token_s *const tokens)
 
     while (TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_Pow)
     {
-        int operation = TOKEN_DATA;
+        char symbol[2] = "";
+        strncpy(symbol, tokens->array[tokens->size].name, 1);
 
         tokens->size++;
 
         tree_node *node_2 = Get_Log_Operator(tokens);
 
-        node_1 = POW(node_1, node_2);
+        node_1 = POW(node_1, node_2, symbol);
     }
 
     return node_1;
@@ -318,18 +374,21 @@ tree_node *Get_Math_Function(token_s *const tokens)
     {
         int operation = TOKEN_DATA;
 
+        char symbol[4] = "";
+        strncpy(symbol, tokens->array[tokens->size].name, strlen(tokens->array[tokens->size].name));
+
         tokens->size++;
 
         tree_node *node_2 = Get_Petrovich(tokens);
 
         if (operation == Op_Ln)
-            node_1 = LN(node_2);
+            node_1 = LN(node_2, symbol);
         else if (operation == Op_Sin)
-            node_1 = SIN(node_2);
+            node_1 = SIN(node_2, symbol);
         else if (operation == Op_Cos)
-            node_1 = COS(node_2);
+            node_1 = COS(node_2, symbol);
         else if (operation == Op_Exp)
-            node_1 = EXP(node_2);
+            node_1 = EXP(node_2, symbol);
     }
 
     return node_1;

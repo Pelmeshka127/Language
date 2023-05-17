@@ -1,3 +1,0 @@
-POP [1+ax]
-OUT
-HLT

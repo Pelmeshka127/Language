@@ -21,32 +21,32 @@
 #define cR  \
     Diff_Copy_Node(RIGHT)
 
-#define ADD(left, right) \
-    Tree_New_Node(Op_Type, Op_Add, "+", left, right)
+#define ADD(left, right, op_word) \
+    Tree_New_Node(Op_Type, Op_Add, op_word, left, right)
 
-#define SUB(left, right) \
-    Tree_New_Node(Op_Type, Op_Sub, "-", left, right)
+#define SUB(left, right, op_word) \
+    Tree_New_Node(Op_Type, Op_Sub, op_word, left, right)
 
-#define MUL(left, right) \
-    Tree_New_Node(Op_Type, Op_Mul, "*", left, right)
+#define MUL(left, right, op_word) \
+    Tree_New_Node(Op_Type, Op_Mul, op_word, left, right)
 
-#define DIV(left, right) \
-    Tree_New_Node(Op_Type, Op_Div, "/", left, right)
+#define DIV(left, right, op_word) \
+    Tree_New_Node(Op_Type, Op_Div, op_word, left, right)
 
-#define POW(left, right) \
-    Tree_New_Node(Op_Type, Op_Pow, "^", left, right)
+#define POW(left, right, op_word) \
+    Tree_New_Node(Op_Type, Op_Pow, op_word, left, right)
 
-#define SIN(left)   \
-    Tree_New_Node(Op_Type, Op_Sin, "sin", left, nullptr)
+#define SIN(left, symbol)   \
+    Tree_New_Node(Op_Type, Op_Sin, symbol, left, nullptr)
 
-#define COS(left)   \
-    Tree_New_Node(Op_Type, Op_Cos, "cos", left, nullptr)
+#define COS(left, symbol)   \
+    Tree_New_Node(Op_Type, Op_Cos, symbol, left, nullptr)
 
-#define LN(left)    \
-    Tree_New_Node(Op_Type, Op_Ln, "ln", left, nullptr)
+#define LN(left, symbol)    \
+    Tree_New_Node(Op_Type, Op_Ln, symbol, left, nullptr)
 
-#define EXP(left)   \
-    Tree_New_Node(Op_Type, Op_Exp, "exp", left, nullptr)
+#define EXP(left, symbol)   \
+    Tree_New_Node(Op_Type, Op_Exp, symbol, left, nullptr)
 
 #define New_Num(data) \
     Tree_New_Node(Num_Type, data)
@@ -54,14 +54,14 @@
 #define New_Var(var)    \
     Tree_New_Node(Var_Type, 0, var)
 
-#define ASSIGNMENT(left, right)  \
-    Tree_New_Node(Op_Type, Op_Asg, "=", left, right)
+#define ASSIGNMENT(left, right, symbol)  \
+    Tree_New_Node(Op_Type, Op_Asg, symbol, left, right)
 
 #define New_Connect_Type(left, right)   \
     Tree_New_Node(Connect_Type, 0, nullptr, left, right)
 
-#define WHILE_NODE(condition, body)  \
-    Tree_New_Node(Op_Type, Op_While, "while", condition, body)
+#define WHILE_NODE(condition, body, op_word)  \
+    Tree_New_Node(Op_Type, Op_While, op_word, condition, body)
 
 #define TOKEN_TYPE(token_type)    \
     tokens->array[tokens->size].type == token_type

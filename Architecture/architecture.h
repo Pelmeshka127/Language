@@ -53,6 +53,7 @@ enum Operation_Types {
     Op_Right_Br = 26,
     Op_Input    = 27,
     Op_Print    = 28,
+    Op_Init     = 29,
     Op_End      = 30,
 };
 

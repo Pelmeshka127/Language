@@ -2,6 +2,7 @@
 #include "dump.h"
 #include "../Front_End/lexer.h"
 #include "../Front_End/frontend.h"
+#include "../Back_End/back_end.h"
 
 //-------------------------------------------------------------------------------//
 
@@ -94,8 +95,8 @@ int Tree_Download(tree_s * const my_tree, char * file_name)
 
     Tokenizer(&tokens, &onegin);
 
-    // for (int i = 0; i < tokens.capacity; i++)
-    //     printf("%s\n", tokens.array[i].name);
+    for (int i = 0; i < tokens.capacity; i++)
+        printf("%s\n", tokens.array[i].name);
 
     my_tree->root = Get_General(&tokens); //Adding recursive decsent
     if (my_tree->root == nullptr)
@@ -105,6 +106,27 @@ int Tree_Download(tree_s * const my_tree, char * file_name)
         return File_Error;
     }
 
+    name_table table = {};
+
+    Name_Table_Ctor(&table, tokens.capacity);
+
+    FILE *asm_file = fopen("asm.txt", "w");
+
+    if (asm_file == nullptr)
+    {
+        fprintf(stderr, "Failed reading file with source tree in function %s\n", __PRETTY_FUNCTION__);
+        return File_Error;
+    }
+
+    Create_Asm_File(asm_file, my_tree->root, &table);
+
+    if (fclose(asm_file) == EOF)
+    {
+        fprintf(stderr, "Failed clothing the source file in function %s\n", __PRETTY_FUNCTION__);
+        return File_Error;
+    }
+
+    Name_Table_Dtor(&table);
     Onegin_Dtor(&onegin);
     Token_Dtor(&tokens);
 
