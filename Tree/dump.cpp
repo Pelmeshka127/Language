@@ -87,8 +87,8 @@ void Tree_Draw(tree_node * const root)
 
     if (root->type == Op_Type)
     {
-        char oper_symbol[Oper_Len] = "";
-        Tree_Get_Operator_By_Number(root->data, oper_symbol, Oper_Len);
+        //char oper_symbol[Oper_Len] = "";
+        //Tree_Get_Operator_By_Number(root->data, oper_symbol, Oper_Len);
         fprintf(graph_file, "   \"%p\"[shape = Mrecord, style = filled, fillcolor = \"cornflowerblue\","
                             "   label = \" <value> %s\"];\n", root, root->name);
     }
@@ -98,11 +98,16 @@ void Tree_Draw(tree_node * const root)
                             "   label = \" <value> %d | NUM  \"];\n", root, root->data);
     else if (root->type == Var_Type)
         fprintf(graph_file, "   \"%p\"[shape = Mrecord, style = filled, fillcolor = \"yellow\","
-                            "   label = \" <value> %s | var_data =  %d\"];\n", root, root->name, root->data);
+                            "   label = \" <value> %s\"];\n", root, root->name);
 
     else if (root->type == Connect_Type)
         fprintf(graph_file, "   \"%p\"[shape = Mrecord, style = filled, fillcolor = \"blanchedalmond\","
                             "   label = \" <value> Connect_Node\"];\n", root);
+
+    else if (root->type == Function_Type)
+        fprintf(graph_file, "   \"%p\"[shape = Mrecord, style = filled, fillcolor = \"darkseagreen3\","
+                            "   label = \" <value> %s\"];\n", root, root->name);
+    
     
     if (root->left != nullptr)
         fprintf(graph_file, "  \"%p\" -> \"%p\" [color = \"green\"];\n", root, root->left);

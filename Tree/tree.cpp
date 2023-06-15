@@ -118,7 +118,7 @@ int Tree_Download(tree_s * const my_tree, char * file_name)
         return File_Error;
     }
 
-    Create_Asm_File(asm_file, my_tree->root, &table);
+    Make_Asm_File(asm_file, my_tree->root, &table);
 
     if (fclose(asm_file) == EOF)
     {
@@ -135,266 +135,36 @@ int Tree_Download(tree_s * const my_tree, char * file_name)
 
 //-------------------------------------------------------------------------------//
 
-int Tree_Get_Number_By_Operator(char * operation)
+int Tree_Print_Pre_Order(FILE * dst_file, tree_node *const cur_node)
 {
-    if (strcmp("+", operation) == 0)
-        return Op_Add;
-    else if (strcmp("-", operation) == 0)
-        return Op_Sub;
-    else if (strcmp("*", operation) == 0)
-        return Op_Mul;
-    else if (strcmp("/", operation) == 0)
-        return Op_Div;
-    else if (strcmp("^", operation) == 0)
-        return Op_Pow;
-    else if (strcmp("ln", operation) == 0)
-        return Op_Ln;
-    else if (strcmp("sin", operation) == 0)
-        return Op_Sin;
-    else if (strcmp("cos", operation) == 0)
-        return Op_Cos;
-    else if (strcmp("exp", operation) == 0)
-        return Op_Exp;
-    else if (strcmp("=", operation) == 0)
-        return Op_Asg;
-    else if (strcmp("if", operation) == 0)
-        return Op_If;
-    else if (strcmp("<", operation) == 0)
-        return Op_Below;
-    else if (strcmp("<=", operation) == 0)
-        return Op_Below_Eq;
-    else if (strcmp(">", operation) == 0)
-        return Op_Above;
-    else if (strcmp(">=", operation) == 0)
-        return Op_Above_Eq;
-    else if (strcmp("==", operation) == 0)
-        return Op_Eql;
-    else if (strcmp("exit()", operation) == 0)
-        return Op_End;
-    else if (strcmp("elif", operation) == 0)
-        return Op_Elif;
-    else if (strcmp("else", operation) == 0)
-        return Op_Else;
-    else if (strcmp("!=", operation) == 0)
-        return Op_Not_Eql;
-    else if (strcmp("while", operation) == 0)
-        return Op_While;
-    else if (strcmp("input", operation) == 0)
-        return Op_Input;
-    else if (strcmp("print", operation) == 0)
-        return Op_Print;
+    if (cur_node == nullptr)
+        return No_Error;
 
-    else
-        return Incorrect_Type;
-}
+    fprintf(dst_file, " { ");
 
-//-------------------------------------------------------------------------------//
-
-int Tree_Get_Operator_By_Number(int operation, char * oper_symbol, unsigned long len)
-{
-    if (operation == Op_Add)
-        strncpy(oper_symbol, "+", len);
-    else if (operation == Op_Sub)
-        strncpy(oper_symbol, "-", len);
-    else if (operation == Op_Mul)
-        strncpy(oper_symbol, "*", len);
-    else if (operation == Op_Div)
-        strncpy(oper_symbol, "/", len);
-    else if (operation == Op_Pow)
-        strncpy(oper_symbol, "^", len);
-    else if (operation == Op_Sin)
-        strncpy(oper_symbol, "sin", len);
-    else if (operation == Op_Cos)
-        strncpy(oper_symbol, "cos", len);
-    else if (operation == Op_Ln)
-        strncpy(oper_symbol, "ln", len);
-    else if (operation == Op_Exp)
-        strncpy(oper_symbol, "exp", len);
-    else if (operation == Op_Asg)
-        strncpy(oper_symbol, "=", len);
-    else if (operation == Op_If)
-        strncpy(oper_symbol, "if", len);
-    else if (operation == Op_And)
-        strncpy(oper_symbol, "and", len);
-    else if (operation == Op_Or)
-        strncpy(oper_symbol, "or", len);
-    else if (operation == Op_Below)
-        strncpy(oper_symbol, "below", len);
-    else if (operation == Op_Below_Eq)
-        strncpy(oper_symbol, "below_equal", len);
-    else if (operation == Op_Above)
-        strncpy(oper_symbol, "above", len);
-    else if (operation == Op_Above_Eq)
-        strncpy(oper_symbol, "above_equal", len);
-    else if (operation == Op_Eql)
-        strncpy(oper_symbol, "==", len);
-    else if (operation == Op_End)
-        strncpy(oper_symbol, "exit()", len);
-    else if (operation == Op_Elif)
-        strncpy(oper_symbol, "elif", len);
-    else if (operation == Op_Else)
-        strncpy(oper_symbol, "else", len);
-    else if (operation == Op_Not_Eql)
-        strncpy(oper_symbol, "!=", len);
-    else if (operation == Op_While)
-        strncpy(oper_symbol, "while", len);
-    else if (operation == Op_Input)
-        strncpy(oper_symbol, "input", len);
-    else if (operation == Op_Print)
-        strncpy(oper_symbol, "print", len);
-
-    else
+    switch(cur_node->type)
     {
-        //fprintf(stderr, "Incorrect type of oper %s in %s\n", operation, __PRETTY_FUNCTION__);
-        return Incorrect_Node;
-    }
-    
-    return No_Error;
-}
-
-//-------------------------------------------------------------------------------//
-
-int Tree_Printer(tree_node * cur_node, const int print_type)
-{   
-    const char * file_name = nullptr;
-    switch(print_type)
-    {
-        case Pre_Order:
-        file_name = "trees/pre_order_tree.txt";
-        break;
-
-        case In_Order:
-        file_name = "trees/in_order_tree.txt";
-        break;
-
-        case Post_Order:
-        file_name = "trees/post_order_tree.txt";
-        break;
-
+        case Num_Type:
+            fprintf(dst_file, "%d:%d", cur_node->type, cur_node->data);
+            break;
+        case Var_Type:
+        case Function_Type:
+        case Op_Type:
+            fprintf(dst_file, "%d:%s", cur_node->type, cur_node->name);
+            break;
         default:
-        fprintf(stderr, "Incorrect type of tree print in function %s: %d\n", __PRETTY_FUNCTION__, print_type);
-        return File_Error;
+            break;
     }
 
-    // FILE * dst_file = fopen(file_name, "w");
-    // if (dst_file == nullptr)
-    // {
-    //     fprintf(stderr, "Failed openning file with of tree printing in function %s\n", __PRETTY_FUNCTION__);
-    //     return File_Error;
-    // }   
+    Tree_Print_Pre_Order(dst_file, cur_node->left);
+    Tree_Print_Pre_Order(dst_file, cur_node->right);
 
-    // switch(print_type)
-    // {
-    //     case Pre_Order:
-    //     Tree_Print_Pre_Order(cur_node, dst_file);
-    //     break;
-
-    //     case In_Order:
-    //     Tree_Print_In_Order(cur_node, dst_file);
-    //     break;
-
-    //     case Post_Order:
-    //     Tree_Print_Post_Order(cur_node, dst_file);
-    //     break;
-    // }
-
-    // fclose(dst_file);
+    fprintf(dst_file, " } ");
 
     return No_Error;
 }
 
-// //-------------------------------------------------------------------------------//
-
-// int Tree_Print_Pre_Order(tree_node * const cur_node, FILE * dst_file)
-// {
-//     if (cur_node == nullptr)
-//         return No_Error;
-
-//     fprintf(dst_file, " ( ");
-
-//     if (cur_node->type == Num_Type)
-//         fprintf(dst_file, "%d", cur_node->data);
-
-//     else if (cur_node->type == Op_Type)
-//     {
-//         char oper_symbol[Oper_Len] = "";
-//         Tree_Get_Operator_By_Number(cur_node->data, oper_symbol, Oper_Len);
-//         fprintf(dst_file, "%s", oper_symbol);
-//     }
-
-//     else if (cur_node->type == Var_Type)
-//         fprintf(dst_file, "%c", Tree_Get_Variable_By_Number(cur_node->data));
-
-//     Tree_Print_Pre_Order(cur_node->left, dst_file);
-//     Tree_Print_Pre_Order(cur_node->right, dst_file);
-
-//     fprintf(dst_file, " ) ");
-
-//     return No_Error;
-// }
-
-// //-------------------------------------------------------------------------------//
-
-// int Tree_Print_In_Order(tree_node * const cur_node, FILE * dst_file)
-// {
-//     if (cur_node == nullptr)
-//         return No_Error;
-
-//     fprintf(dst_file, " ( ");    
-
-//     Tree_Print_In_Order(cur_node->left, dst_file);    
-
-//     if (cur_node->type == Num_Type)
-//         fprintf(dst_file, "%d", cur_node->data);
-        
-//     else if (cur_node->type == Op_Type)
-//     {   
-//         char oper_symbol[Oper_Len] = "";
-//         Tree_Get_Operator_By_Number(cur_node->data, oper_symbol, Oper_Len);
-//         fprintf(dst_file, "%s", oper_symbol);
-//     }
-
-//     else if (cur_node->type == Var_Type)
-//         fprintf(dst_file, "%c", Tree_Get_Variable_By_Number(cur_node->data));
-
-//     Tree_Print_In_Order(cur_node->right, dst_file);
-
-//     fprintf(dst_file, " ) ");
-    
-//     return No_Error;
-// }
-
-// //-------------------------------------------------------------------------------//
-
-// int Tree_Print_Post_Order(tree_node * const cur_node, FILE * dst_file)
-// {
-//     if (cur_node == nullptr)
-//         return No_Error;
-
-//     fprintf(dst_file, " ( ");
-
-//     Tree_Print_Post_Order(cur_node->left, dst_file);
-//     Tree_Print_Post_Order(cur_node->right, dst_file);
-
-//     if (cur_node->type == Num_Type)
-//         fprintf(dst_file, "%d", cur_node->data);
-
-//     else if (cur_node->type == Op_Type)
-//     {
-//         char oper_symbol[Oper_Len] = "";
-//         Tree_Get_Operator_By_Number(cur_node->data, oper_symbol, Oper_Len);
-//         fprintf(dst_file, "%s", oper_symbol);
-//     }
-
-//     else if (cur_node->type == Var_Type)
-//         fprintf(dst_file, "%c", Tree_Get_Variable_By_Number(cur_node->data));
-
-//     fprintf(dst_file, " ) ");
-
-//     return No_Error;
-// }
-
-// //-------------------------------------------------------------------------------//
+//-------------------------------------------------------------------------------//
 
 int Tree_Find_Variable_Node(tree_node * const cur_node)
 {
@@ -470,6 +240,8 @@ int Check_Cmdline_Arg(int args)
     return No_Error;
 }
 
+//-------------------------------------------------------------------------------//
+
 int Eval(tree_node * const cur_node)
 {
     if (cur_node->type == Num_Type)
@@ -492,3 +264,5 @@ int Eval(tree_node * const cur_node)
 
     return Incorrect_Node;
 }
+
+//-------------------------------------------------------------------------------//

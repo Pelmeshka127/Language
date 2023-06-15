@@ -1,8 +1,19 @@
-push 1
-pop [-1]
-push 3
-pop [-1]
-push 2
-pop [-1]
+jump: jump_over_main
+main:
+push 0
+pop [0]
+in
+pop [0]
+call Riley:
+pop [0]
+push [0]
 out
 hlt
+jump_over_main:
+jump: jump_over_Riley
+Riley:
+push 2
+mul
+pop [-1]
+hlt
+jump_over_Riley:

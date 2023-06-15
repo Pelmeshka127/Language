@@ -68,3 +68,5 @@
 
 #define TOKEN_DATA  \
     tokens->array[tokens->size].data
+
+#define FUNC_DECLARATION "step_brother"

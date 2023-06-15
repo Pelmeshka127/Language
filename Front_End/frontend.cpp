@@ -6,15 +6,127 @@ tree_node *Get_General(token_s *const tokens)
 {
     assert(tokens);
 
-    tree_node *node = Get_Type(tokens);
+    tree_node *node = Get_Dec_Function(tokens);
 
-    printf("%d and %d\n", tokens->size, tokens->capacity);
-
-    assert(tokens->size == tokens->capacity);
+    if (tokens->size != tokens->capacity)
+    {
+        fprintf(stderr, "Failed making tree because size %d!= capacity %d in %s; %d\n",
+                tokens->size, tokens->capacity, __PRETTY_FUNCTION__, __LINE__);
+        return nullptr;
+    }
 
     Tree_Dump_Node(node);
 
     return node;
+}
+
+//-------------------------------------------------------------------------------//
+
+tree_node *Get_Dec_Function(token_s *const tokens)
+{
+    assert(tokens);
+
+    tree_node *node_1 = nullptr;
+
+    while (TOKEN_TYPE(Function_Type) && TOKEN_DATA == Op_Dec_Func)
+    {
+        char symbol[Max_Size] = "";
+
+        tokens->size++;
+
+        node_1 = Tree_New_Node(Function_Type, Op_Func_Name, tokens->array[tokens->size].name);
+
+        strncpy(symbol, node_1->name, strlen(node_1->name));
+
+        tokens->size++;
+
+        if (strcmp(tokens->array[tokens->size].name, "im") == 0)
+        {
+            tokens->size++;
+            node_1 = Get_Function_Arguments(tokens);
+        }
+        
+        else
+        {
+            fprintf(stderr, "No im stuck!!\n");
+            return nullptr;
+        }
+
+        tokens->size++;
+
+        tree_node *node_2 = Get_Body(tokens);
+
+        node_1 = Tree_New_Node(Function_Type, Op_Dec_Func, symbol, node_1, node_2);
+
+        node_1 = New_Connect_Type(node_1, Get_Dec_Function(tokens));
+    }
+
+    return node_1;
+}
+
+//-------------------------------------------------------------------------------//
+
+tree_node *Get_Function_Call(token_s *const tokens)
+{
+    assert(tokens);
+
+    tree_node *node_1 = nullptr;
+
+    while (strcmp(tokens->array[tokens->size + 1].name, "im") == 0)
+    {
+        char symbol[Max_Size] = "";
+
+        node_1 = Tree_New_Node(Function_Type, Op_Func_Name, tokens->array[tokens->size].name);
+
+        strncpy(symbol, node_1->name, strlen(node_1->name));
+
+        tokens->size++;
+
+        if (strcmp(tokens->array[tokens->size].name, "im") == 0)
+        {
+            tokens->size++;
+            node_1 = Get_Function_Arguments(tokens);
+        }
+        
+        else
+        {
+            fprintf(stderr, "No im stuck!!\n");
+            return nullptr;
+        }
+
+        node_1 = Tree_New_Node(Function_Type, Op_Func_Name, symbol, node_1, nullptr);
+
+        tokens->size++;
+
+    }
+
+    return node_1;
+}
+
+//-------------------------------------------------------------------------------//
+
+tree_node *Get_Function_Arguments(token_s *const tokens)
+{
+    assert(tokens);
+
+    tree_node *node_1 = nullptr;
+    tree_node *node_2 = nullptr;
+
+    while (strcmp(tokens->array[tokens->size].name, "stuck") != 0)
+    {
+        node_1 = Get_Petrovich(tokens);
+
+        if (TOKEN_TYPE(Connect_Type))
+        {
+            tokens->size++;
+            node_2 = Get_Function_Arguments(tokens);
+        }       
+    }
+
+    if (node_1 == nullptr)
+        return nullptr;
+        
+    return New_Connect_Type(node_1, node_2);
 }
 
 //-------------------------------------------------------------------------------//
@@ -44,9 +156,20 @@ tree_node *Get_Type(token_s *const tokens)
     else if (TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_Init)
         return Get_Init_Var(tokens);
 
+    else if (TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_Ret)
+        return Get_Ret(tokens);
+
+    // else if (TOKEN_TYPE(Connect_Type))
+    // {
+    //  
+    //     printf("%d\n", TOKEN_DATA);
+    //     tokens->size++;
+    //     return Get_Type(tokens);
+    // }
+
     else
     {
-        fprintf(stderr, "Unknown token %s in >????\n", tokens->array[tokens->size].name);
+        fprintf(stderr, "Unknown token [%s] in >????\n", tokens->array[tokens->size].name);
         return nullptr;
     }
 }
@@ -68,7 +191,14 @@ tree_node *Get_Assignment(token_s *const tokens)
 
         tokens->size++;
 
-        tree_node *node_2 = Get_Add_Sub(tokens);
+        tree_node *node_2 = nullptr;
+
+        if (strcmp(tokens->array[tokens->size + 1].name, "im") == 0)
+            node_2 = Get_Function_Call(tokens);
+
+        else
+            node_2 = Get_Add_Sub(tokens);
+
 
         node_1 = ASSIGNMENT(node_1, node_2, symbol);
 
@@ -93,7 +223,7 @@ tree_node *Get_While(token_s *const tokens)
 
         tokens->size++;
 
-        node_1 = Get_Petrovich(tokens);
+        node_1 = Get_Condition(tokens);
 
         tree_node *node_2 = Get_Body(tokens);
 
@@ -113,6 +243,7 @@ tree_node *Get_If(token_s *const tokens)
 
     tree_node *node_1 = nullptr;
     tree_node *node_2 = nullptr;
+    tree_node *node_continue = nullptr;
 
     char *condition_word = tokens->array[tokens->size].name;
     int condition_num    = tokens->array[tokens->size].data;
@@ -120,22 +251,46 @@ tree_node *Get_If(token_s *const tokens)
     tokens->size++;
 
     if (strcmp(condition_word, "else") != 0)
-        node_1 = Get_Petrovich(tokens);
+        node_1 = Get_Condition(tokens);
 
     node_2 = Get_Body(tokens);
 
-    node_1 = Tree_New_Node(Op_Type, condition_num, condition_word, node_1, node_2);
-
-    Tree_Dump_Node(node_1);
+    node_1 = New_Connect_Type(node_1, node_2);
 
     if (TOKEN_TYPE(Op_Type) && (TOKEN_DATA == Op_Elif || TOKEN_DATA == Op_Else))
     {
-        tree_node *continue_node = Get_If(tokens);
-        node_1 = New_Connect_Type(node_1, continue_node);
+        node_continue = Get_If(tokens);
     }
 
-    return New_Connect_Type(node_1, Get_Type(tokens));
+    node_1 = Tree_New_Node(Op_Type, condition_num, condition_word, node_1, node_continue);
 
+    if (strcmp(condition_word, "if") == 0)
+        return New_Connect_Type(node_1, Get_Type(tokens));
+    else 
+        return node_1;
+
+}
+
+//-------------------------------------------------------------------------------//
+
+tree_node *Get_Condition(token_s *const tokens)
+{
+    assert(tokens);
+
+    tree_node *node_1 = nullptr;
+
+    while (TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_Left_Br)
+    {
+        tokens->size++;
+
+        node_1 = Get_Add_Sub(tokens);
+
+        assert(TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_Right_Br);
+
+        tokens->size++;
+    }
+
+    return node_1;
 }
 
 //-------------------------------------------------------------------------------//
@@ -151,7 +306,6 @@ tree_node *Get_Body(token_s *const tokens)
         tokens->size++;
 
         node_1 = Get_Type(tokens);
-
         assert(TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_End_Sex);
 
         tokens->size++;
@@ -209,9 +363,11 @@ tree_node *Get_Input(token_s *const tokens)
         node_1 = Get_Petrovich(tokens);
 
         node_1 = Tree_New_Node(Op_Type, Op_Input, symbol, node_1, nullptr);
+
+        node_1 = New_Connect_Type(node_1, Get_Type(tokens));
     }
 
-    return New_Connect_Type(node_1, Get_Type(tokens));
+    return node_1;
 }  
 
 //-------------------------------------------------------------------------------//
@@ -232,9 +388,34 @@ tree_node *Get_Print(token_s *const tokens)
         node_1 = Get_Petrovich(tokens);
 
         node_1 = Tree_New_Node(Op_Type, Op_Print, symbol, node_1, nullptr);
+
+        node_1 = New_Connect_Type(node_1, Get_Type(tokens));
     }
 
-    return New_Connect_Type(node_1, Get_Type(tokens));
+    return node_1;
+}
+
+//-------------------------------------------------------------------------------//
+
+tree_node *Get_Ret(token_s *const tokens)
+{
+    assert(tokens);
+
+    tree_node *node_1 = nullptr;
+
+    while (TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_Ret)
+    {
+        char symbol[7] = "";
+        strncpy(symbol, tokens->array[tokens->size].name, strlen(tokens->array[tokens->size].name));
+
+        tokens->size++;
+
+        tree_node *node_2 = Get_Add_Sub(tokens);
+
+        node_1 = Tree_New_Node(Op_Type, Op_Ret, symbol, node_2, nullptr);
+    }
+
+    return node_1;
 }
 
 //-------------------------------------------------------------------------------//
@@ -419,6 +600,7 @@ tree_node *Get_Petrovich(token_s *const tokens)
     else if (TOKEN_TYPE(Var_Type))
         node_1 = Get_Var(tokens);
 
+
     return node_1;
 }
 
@@ -481,8 +663,8 @@ int Is_Log_Operation(char *word)
     if (word == nullptr)
         return 0;
 
-#   define LOG_OP(name, number)         \
-    else if (Stricmp(#name, word) == 0)    \
+#   define LOG_OP(name, number)             \
+    else if (Stricmp(#name, word) == 0)     \
         return number;
 
 #   include "../Architecture/logoperators.h"

@@ -1,4 +1,5 @@
 #include "lexer.h"
+#include "../Architecture/dsl.h"
 
 #include <ctype.h>
 
@@ -24,6 +25,26 @@ int Tokenizer(token_s *const tokens, Text_Info *const onegin)
             tokens->array[tokens->capacity].name = (char *)calloc (Max_Size, sizeof(char));
             Token_Create_Number(tokens, onegin, tokens->capacity);
             tokens->capacity++;
+        }
+
+        else if (**onegin->pointers == ',')
+        {
+            tokens->array[tokens->capacity].name = (char *)calloc (2, sizeof(char));
+            tokens->array[tokens->capacity].data = Connect_Type;
+            tokens->array[tokens->capacity].type = Connect_Type;
+            strncpy(tokens->array[tokens->capacity].name, ",", 2);
+            tokens->capacity++;
+            (*onegin->pointers)++;
+        }
+
+        else if (Strincmp(FUNC_DECLARATION, *onegin->pointers, strlen(FUNC_DECLARATION)) == 0)
+        {
+            tokens->array[tokens->capacity].name = (char *)calloc (Max_Size, sizeof(char));
+            strncpy(tokens->array[tokens->capacity].name, *onegin->pointers, strlen(FUNC_DECLARATION));
+            tokens->array[tokens->capacity].type = Function_Type;
+            tokens->array[tokens->capacity].data = Op_Dec_Func;
+            tokens->capacity++;
+            (*onegin->pointers) += strlen(FUNC_DECLARATION);
         }
 
         else 
@@ -60,6 +81,14 @@ int Tokenizer(token_s *const tokens, Text_Info *const onegin)
         {
             tokens->array[tokens->capacity].name = (char *)calloc (Max_Size, sizeof(char));
             Token_Create_Var(tokens, onegin, tokens->capacity);
+            tokens->capacity++;
+        }
+
+        else if (**onegin->pointers == ',')
+        {
+            tokens->array[tokens->capacity].name = (char *)calloc (2, sizeof(char));
+            strncpy(tokens->array[tokens->capacity].name, ",", 2);
+            (*onegin->pointers)++;
             tokens->capacity++;
         }
         

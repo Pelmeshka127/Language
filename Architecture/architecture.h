@@ -16,13 +16,14 @@ enum Errors_Code {
     Incorrect_Var   = 21,
 };
 
-const int Num_Type      = 1;
+enum Types {
+    Num_Type      = 1,
+    Op_Type       = 2,
+    Var_Type      = 3,
+    Connect_Type  = 4,
+    Function_Type = 5,
+};
 
-const int Op_Type       = 2;
-
-const int Var_Type      = 3;
-
-const int Connect_Type  = 4;
 
 enum Operation_Types {
     Op_Add      = 1,
@@ -55,29 +56,10 @@ enum Operation_Types {
     Op_Print    = 28,
     Op_Init     = 29,
     Op_End      = 30,
+    Op_Dec_Func = 31,
+    Op_Func_Name= 32,
+    Op_Ret      = 33,
 };
-
-enum Var_Types {
-    Var_X   = 1,
-    Var_Y   = 2,
-    Var_Z   = 3,
-};
-
-enum Programm_Mode {
-    Show_Tree                   = 1,
-    Find_Func_Value_At_Point    = 2,
-    Get_Diff                    = 3,
-    Find_Diff_Value_At_Point    = 4,
-    Show_Diff_Tree              = 5,
-    Maclaurin                   = 6,
-    Finish_Prog                 = 10,
-};
-
-const int Pre_Order  = 1;
-
-const int In_Order   = 2;
-
-const int Post_Order = 3;
 
 const int Oper_Len   = 15;
 

@@ -58,48 +58,7 @@ int Tree_Download(tree_s * const my_tree, char * file_name);
 
 //-------------------------------------------------------------------------------//
 
-/// @brief Function finds out the operation code by it's symbol
-/// @param operation is ptr the operaton symbol
-/// @return code of the operation
-int Tree_Get_Number_By_Operator(char * operation);    
-
-//-------------------------------------------------------------------------------//
-
-/// @brief Function finds out the symbol of the operation by it's code
-/// @param operation is code of the opearation
-/// @return the symbol of the operation
-int Tree_Get_Operator_By_Number(int operation, char * oper_symbol, unsigned long len);
-
-//-------------------------------------------------------------------------------//
-
-/// @brief 
-/// @param cur_node 
-/// @param print_type 
-/// @return 
-int Tree_Printer(tree_node * cur_node, const int print_type);
-
-//-------------------------------------------------------------------------------//
-
-/// @brief Function walks tree in the infix order
-/// @param my_tree is ptr on the tree struct
-/// @return 
-int Tree_Print_In_Order(tree_node * const cur_node, FILE * dst_file);
-
-//-------------------------------------------------------------------------------//
-
-/// @brief 
-/// @param cur_node 
-/// @return 
-int Tree_Print_Pre_Order(tree_node * const cur_node, FILE * dst_file);
-
-//-------------------------------------------------------------------------------//
-
-/// @brief 
-/// @param cur_node 
-/// @return 
-int Tree_Print_Post_Order(tree_node * const cur_node, FILE * dst_file);
-
-//-------------------------------------------------------------------------------//
+int Tree_Print_Pre_Order(FILE * dst_file, tree_node *const cur_node);
 
 /// @brief Function find out if the node is variable node
 /// @param cur_node is ptr on the current node

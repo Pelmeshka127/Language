@@ -1,4 +1,4 @@
-all: difftask
+all: asmtask
 
 FLAGS = -D _DEBUG -ggdb3 -std=c++17 -O0 -Wall -Wextra -Weffc++\
  -Wc++14-compat -Wmissing-declarations\
@@ -18,34 +18,19 @@ FLAGS = -D _DEBUG -ggdb3 -std=c++17 -O0 -Wall -Wextra -Weffc++\
 			   -fsanitize=float-divide-by-zero,integer-divide-by-zero,nonnull-attribute,null,\
 			   -fsanitize=address,signed-integer-overflow,undefined,unreachable,vla-bound,vptr,
 
-difftask: main.o tree.o dump.o parser.o frontend.o translator.o lexer.o back_end.o
-	g++ obj/main.o obj/tree.o obj/dump.o obj/parser.o obj/frontend.o obj/translator.o obj/lexer.o obj/back_end.o $(FLAGS) -o obj/lang
+asmtask: main.o assembler.o parser.o
+	g++ ./asm_obj/main.o ./asm_obj/assembler.o ./asm_obj/parser.o $(FLAGS) -o assembly
 
-main.o: ./main.cpp
-	g++ -c ./main.cpp $(FLAGS) -o obj/main.o
+main.o: main.cpp
+	g++ -c main.cpp $(FLAGS) -o asm_obj/main.o
 
-tree.o: ./Tree/tree.cpp
-	g++ -c ./Tree/tree.cpp $(FLAGS) -o obj/tree.o
+assembler.o: assembler.cpp
+	g++ -c assembler.cpp $(FLAGS) -o asm_obj/assembler.o
 
-dump.o: ./Tree/dump.cpp
-	g++ -c ./Tree/dump.cpp $(FLAGS) -o obj/dump.o
-
-parser.o: ./Parsering/parser.cpp
-	g++ -c ./Parsering/parser.cpp $(FLAGS) -o obj/parser.o
-
-frontend.o: ./Front_End/frontend.cpp
-	g++ -c ./Front_End/frontend.cpp $(FLAGS) -o obj/frontend.o
-
-translator.o: ./Translator/translator.cpp
-	g++ -c ./Translator/translator.cpp $(FLAGS) -o obj/translator.o
-
-lexer.o: ./Front_End/lexer.cpp
-	g++ -c ./Front_End/lexer.cpp $(FLAGS) -o obj/lexer.o
-
-back_end.o: ./Back_end/back_end.cpp
-	g++ -c ./Back_end/back_end.cpp $(FLAGS) -o obj/back_end.o
+parser.o:
+	g++ -c ../Parsering/parser.cpp $(FLAGS) -o ./asm_obj/parser.o
 
 .PHONY: clean
 
 clean:
-	rm *.o list
+	rm *.o assembly
