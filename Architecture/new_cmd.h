@@ -110,7 +110,7 @@ DEF_CMD(HORNY, Op_While, 5, {
 })
 
 DEF_CMD(CUMMING, Op_End, 7, {
-    fprintf(dst_file, "hlt\n");
+    fprintf(dst_file, "ret\n");
 })
 
 DEF_CMD(START_SEX, Op_Start_Sex, 9, {})
@@ -144,7 +144,6 @@ DEF_CMD(MILF, Op_Init, 4, {
     }
 })
 
-DEF_CMD(ANAl, Op_Ret, 4, {
+DEF_CMD(ANAL, Op_Ret, 4, {
     Parse_Node(dst_file, node->left, table);
-    fprintf(dst_file, "ret\n");
 })

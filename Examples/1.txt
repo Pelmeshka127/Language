@@ -1,19 +1,22 @@
-step_brother main im stuck
+step_brother hentai im stuck
 start_sex
 
 milf x = 0
 
+milf y = 5
+
 fisting_anal(x)
 
-x = Riley im x stuck
+x = Riley im x, y stuck
 
 suck_dick(x)
 
 cumming
 end_sex
 
-step_brother Riley im var stuck
+step_brother Riley im var, num stuck
 start_sex
-    var = var * 2
+    var = var * num
+    anal var
     cumming
 end_sex

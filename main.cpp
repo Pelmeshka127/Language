@@ -1,6 +1,5 @@
 #include "Tree/tree.h"
 #include "Tree/dump.h"
-#include "Translator/translator.h"
 
 int main(int argc, char ** argv)
 {

@@ -1,8 +1,11 @@
 #include "back_end.h"
 
 static int If_Count     = 1;
+
 static int Elif_Count   = 1;
+
 static int Else_Count   = 1;
+
 static int While_Count  = 1;
 
 //-------------------------------------------------------------------------------//
@@ -80,6 +83,7 @@ int Parse_Node(FILE *dst_file, tree_node *const node, name_table *const table)
             {
                 return Incorrect_Var;
             }
+            Is_Uninitialised(node, table);
             fprintf(dst_file, "push [%d]\n", Name_Table_Analyz(node, table));
             break;
 
@@ -160,19 +164,34 @@ int Parse_Function(FILE *dst_file, tree_node *const node, name_table *const tabl
 {
     assert(table);
 
-    switch(node->data)
+    if (strcmp(node->name, "hentai") == 0)
     {
-        case Op_Dec_Func:
-            fprintf(dst_file, "jump: jump_over_%s\n", node->name);
-            fprintf(dst_file, "%s:\n", node->name);
-            Parse_Node(dst_file, node->left, table);
-            Parse_Node(dst_file, node->right, table);
-            fprintf(dst_file, "jump_over_%s:\n", node->name);
-            break;
-        
-        case Op_Func_Name:
-            fprintf(dst_file, "call %s:\n", node->name);
-            break;
+        fprintf(dst_file, "call hentai\n");
+        fprintf(dst_file, "hlt\n");
+        fprintf(dst_file, "hentai:\n");
+        Parse_Node(dst_file, node->right, table);
+    }
+
+    else
+    {
+        switch(node->data)
+        {
+            case Op_Dec_Func:
+                fprintf(dst_file, "jump: jump_over_%s\n", node->name);
+                fprintf(dst_file, "%s:\n", node->name);
+                Parse_Declaration_Arguments(dst_file, node->left, table);
+                Parse_Node(dst_file, node->right, table);
+                fprintf(dst_file, "jump_over_%s:\n", node->name);
+                break;
+            
+            case Op_Func_Name:
+                Parse_Call_Arguments(dst_file, node->left, table);
+                fprintf(dst_file, "call %s\n", node->name);
+                break;
+
+            default:
+                break;
+        }
     }
 
     return No_Error;
@@ -225,6 +244,119 @@ int Is_Uninitialised(tree_node *const node, name_table *const table)
     }
 
     return No_Error;
+}
+
+//-------------------------------------------------------------------------------//
+
+int Add_Variable(tree_node *const node, name_table *const table)
+{
+    assert(table);
+
+    strncpy(table->array[table->size].name, node->name, strlen(node->name));
+    table->array[table->size].id = table->size;
+
+    table->size++;
+
+    return table->array[table->size - 1].id;
+}
+
+//-------------------------------------------------------------------------------//
+
+int Parse_Call_Arguments(FILE *dst_file, tree_node *const node, name_table *table)
+{
+    assert(table);
+
+    tree_node *cur_node = node;
+
+    while (cur_node)
+    {
+        if (cur_node)
+        {
+            switch(cur_node->type)
+            {
+                case Connect_Type:
+                    Parse_Call_Arguments(dst_file, cur_node->left, table);
+                    break;
+                
+                case Num_Type:
+                    Push_Pop_Arguments(dst_file, Cmd_Push, Not_Ram, cur_node->data); 
+                    break;
+
+                case Var_Type:
+                    Push_Pop_Arguments(dst_file, Cmd_Push, Ram, Name_Table_Analyz(cur_node, table));
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        cur_node = cur_node->right;
+    }
+
+    return No_Error;
+}
+
+//-------------------------------------------------------------------------------//
+
+int Push_Pop_Arguments(FILE *dst_file, int cmd, int destination, int value)
+{
+    if (cmd == Cmd_Push)
+        fprintf(dst_file, "push ");
+
+    else
+        fprintf(dst_file, "pop ");
+
+    if (destination == Ram)
+        fprintf(dst_file, "[");
+
+    fprintf(dst_file, "%d", value);
+
+    if (destination == Ram)
+        fprintf(dst_file, "]");
+    
+    fprintf(dst_file, "\n");
+
+    return No_Error;
+}
+
+//-------------------------------------------------------------------------------//
+
+int Parse_Declaration_Arguments(FILE *dst_file, tree_node *const node, name_table *table)
+{
+    assert(table);
+
+    tree_node *cur_node = node;
+
+    int params_array[Max_Size] = {};
+
+    int cur_param = 0;   
+
+    while (cur_node)
+    {
+        if (cur_node->left)
+        {
+            switch(cur_node->left->type)
+            {
+                case Var_Type:
+                {
+                    int id = Add_Variable(cur_node->left, table);
+                    params_array[cur_param] = id;
+                    cur_param++;
+                    break;
+                }
+
+                default:
+                    break;
+            }
+        }
+
+        cur_node = cur_node->right;
+    }
+
+    for (cur_param--; cur_param >= 0; cur_param--)
+        Push_Pop_Arguments(dst_file, Cmd_Pop, Ram, params_array[cur_param]);
+
+    return No_Error;  
 }
 
 //-------------------------------------------------------------------------------//

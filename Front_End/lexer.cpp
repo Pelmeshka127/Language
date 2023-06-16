@@ -115,7 +115,6 @@ void Skip_Spaces(Text_Info *const onegin)
 void Move_Pointers(Text_Info *const onegin)
 {
     (*onegin->pointers)++;
-    //onegin->char_num++;
 }
 
 //-------------------------------------------------------------------------------//

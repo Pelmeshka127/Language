@@ -51,8 +51,8 @@
 #define New_Num(data) \
     Tree_New_Node(Num_Type, data)
 
-#define New_Var(var)    \
-    Tree_New_Node(Var_Type, 0, var)
+#define New_Var(var_name, var_type)    \
+    Tree_New_Node(Var_Type, var_type, var_name)
 
 #define ASSIGNMENT(left, right, symbol)  \
     Tree_New_Node(Op_Type, Op_Asg, symbol, left, right)

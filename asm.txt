@@ -1,19 +1,27 @@
-jump: jump_over_main
-main:
+call hentai
+hlt
+hentai:
 push 0
 pop [0]
+push 5
+pop [1]
 in
 pop [0]
-call Riley:
+push [0]
+push [1]
+call Riley
 pop [0]
 push [0]
 out
-hlt
-jump_over_main:
+ret
 jump: jump_over_Riley
 Riley:
-push 2
+pop [3]
+pop [2]
+push [2]
+push [3]
 mul
-pop [-1]
-hlt
+pop [2]
+push [2]
+ret
 jump_over_Riley:

@@ -6,7 +6,7 @@ tree_node *Get_General(token_s *const tokens)
 {
     assert(tokens);
 
-    tree_node *node = Get_Dec_Function(tokens);
+    tree_node *node = Get_Main(tokens);
 
     if (tokens->size != tokens->capacity)
     {
@@ -18,6 +18,48 @@ tree_node *Get_General(token_s *const tokens)
     Tree_Dump_Node(node);
 
     return node;
+}
+
+//-------------------------------------------------------------------------------//
+
+tree_node *Get_Main(token_s *const tokens)
+{
+    assert(tokens);
+
+    tree_node *node_1 = nullptr;
+
+    while (TOKEN_TYPE(Function_Type) && TOKEN_DATA == Op_Dec_Func)
+    {
+        char symbol[Max_Size] = "";
+
+        tokens->size++;
+
+        if (strcmp("hentai", tokens->array[tokens->size].name) != 0)
+        {
+            return nullptr;
+        }
+
+        node_1 = Tree_New_Node(Function_Type, Op_Func_Name, tokens->array[tokens->size].name);
+
+        strncpy(symbol, node_1->name, strlen(node_1->name));
+
+        tokens->size++;
+
+        if (strcmp(tokens->array[tokens->size].name, "im") != 0 || strcmp(tokens->array[tokens->size + 1].name, "stuck") != 0)
+        {
+            return nullptr;
+        }
+
+        tokens->size += 2;
+
+        tree_node *node_2 = Get_Body(tokens);
+
+        node_1 = Tree_New_Node(Function_Type, Op_Dec_Func, symbol, nullptr, node_2);
+
+        node_1 = New_Connect_Type(node_1, Get_Dec_Function(tokens));
+    }
+
+    return node_1;
 }
 
 //-------------------------------------------------------------------------------//
@@ -66,7 +108,7 @@ tree_node *Get_Dec_Function(token_s *const tokens)
 
 //-------------------------------------------------------------------------------//
 
-tree_node *Get_Function_Call(token_s *const tokens)
+tree_node *Get_Function_Call(token_s *const tokens, int parent_type)
 {
     assert(tokens);
 
@@ -97,6 +139,9 @@ tree_node *Get_Function_Call(token_s *const tokens)
         node_1 = Tree_New_Node(Function_Type, Op_Func_Name, symbol, node_1, nullptr);
 
         tokens->size++;
+
+        if (parent_type != Op_Asg)
+            node_1 = New_Connect_Type(node_1, Get_Type(tokens));
 
     }
 
@@ -135,7 +180,10 @@ tree_node *Get_Type(token_s *const tokens)
 {
     assert(tokens);
 
-    if (TOKEN_TYPE(Var_Type))
+    if (TOKEN_TYPE(Var_Type) && strcmp(tokens->array[tokens->size + 1].name, "im") == 0)
+        return Get_Function_Call(tokens, Op_Func_Name);
+
+    else if (TOKEN_TYPE(Var_Type))
         return Get_Assignment(tokens);
     
     else if (TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_While)
@@ -159,14 +207,6 @@ tree_node *Get_Type(token_s *const tokens)
     else if (TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_Ret)
         return Get_Ret(tokens);
 
-    // else if (TOKEN_TYPE(Connect_Type))
-    // {
-    //  
-    //     printf("%d\n", TOKEN_DATA);
-    //     tokens->size++;
-    //     return Get_Type(tokens);
-    // }
-
     else
     {
         fprintf(stderr, "Unknown token [%s] in >????\n", tokens->array[tokens->size].name);
@@ -180,7 +220,7 @@ tree_node *Get_Assignment(token_s *const tokens)
 {
     assert(tokens);
     
-    tree_node *node_1 = Get_Var(tokens);
+    tree_node *node_1 = Get_Var(tokens, Default_Var);
 
     while (TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_Asg)
     {   
@@ -194,7 +234,7 @@ tree_node *Get_Assignment(token_s *const tokens)
         tree_node *node_2 = nullptr;
 
         if (strcmp(tokens->array[tokens->size + 1].name, "im") == 0)
-            node_2 = Get_Function_Call(tokens);
+            node_2 = Get_Function_Call(tokens, Op_Asg);
 
         else
             node_2 = Get_Add_Sub(tokens);
@@ -329,7 +369,7 @@ tree_node *Get_Init_Var(token_s *const tokens)
 
         tokens->size++;
 
-        node_1 = Get_Var(tokens);
+        node_1 = Get_Var(tokens, Default_Var);
 
         assert(TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_Asg);
 
@@ -413,6 +453,8 @@ tree_node *Get_Ret(token_s *const tokens)
         tree_node *node_2 = Get_Add_Sub(tokens);
 
         node_1 = Tree_New_Node(Op_Type, Op_Ret, symbol, node_2, nullptr);
+
+        node_1 = New_Connect_Type(node_1, Get_Type(tokens));
     }
 
     return node_1;
@@ -598,7 +640,7 @@ tree_node *Get_Petrovich(token_s *const tokens)
         node_1 = Get_Number(tokens);
 
     else if (TOKEN_TYPE(Var_Type))
-        node_1 = Get_Var(tokens);
+        node_1 = Get_Var(tokens, Default_Var);
 
 
     return node_1;
@@ -623,7 +665,7 @@ tree_node *Get_Number(token_s *const tokens)
 
 //-------------------------------------------------------------------------------//
 
-tree_node *Get_Var(token_s *const tokens)
+tree_node *Get_Var(token_s *const tokens, int var_type)
 {
     assert(tokens);
 
@@ -631,7 +673,7 @@ tree_node *Get_Var(token_s *const tokens)
 
     sscanf(tokens->array[tokens->size].name, "%s", var);
 
-    tree_node *node = New_Var(var);
+    tree_node *node = New_Var(var, var_type);
 
     tokens->size++;
 

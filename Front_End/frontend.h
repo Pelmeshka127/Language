@@ -14,11 +14,15 @@ tree_node *Get_General(token_s *const tokens);
 
 //-------------------------------------------------------------------------------//
 
+tree_node *Get_Main(token_s *const tokens);
+
+//-------------------------------------------------------------------------------//
+
 tree_node *Get_Dec_Function(token_s *const tokens);
 
 //-------------------------------------------------------------------------------//
 
-tree_node *Get_Function_Call(token_s *const tokens);
+tree_node *Get_Function_Call(token_s *const tokens, int parent_type);
 
 //-------------------------------------------------------------------------------//
 
@@ -94,7 +98,7 @@ tree_node *Get_Log_Operator(token_s *const tokens);
 
 //-------------------------------------------------------------------------------//
 
-tree_node *Get_Var(token_s *const tokens);
+tree_node *Get_Var(token_s *const tokens, int var_type);
 
 //-------------------------------------------------------------------------------//
 

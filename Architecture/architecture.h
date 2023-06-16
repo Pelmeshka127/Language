@@ -24,6 +24,15 @@ enum Types {
     Function_Type = 5,
 };
 
+enum Var_Types {
+    Default_Var = 1,
+    Param_Var   = 2,
+};
+
+enum Function_Types {
+    Op_Dec_Func     = 1,
+    Op_Func_Name    = 2,
+};
 
 enum Operation_Types {
     Op_Add      = 1,
@@ -56,8 +65,6 @@ enum Operation_Types {
     Op_Print    = 28,
     Op_Init     = 29,
     Op_End      = 30,
-    Op_Dec_Func = 31,
-    Op_Func_Name= 32,
     Op_Ret      = 33,
 };
 
