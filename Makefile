@@ -1,5 +1,3 @@
-all: difftask
-
 FLAGS = -D _DEBUG -ggdb3 -std=c++17 -O0 -Wall -Wextra -Weffc++\
  -Wc++14-compat -Wmissing-declarations\
   -Wcast-align -Wcast-qual -Wchar-subscripts\
@@ -18,7 +16,7 @@ FLAGS = -D _DEBUG -ggdb3 -std=c++17 -O0 -Wall -Wextra -Weffc++\
 			   -fsanitize=float-divide-by-zero,integer-divide-by-zero,nonnull-attribute,null,\
 			   -fsanitize=address,signed-integer-overflow,undefined,unreachable,vla-bound,vptr,
 
-difftask: main.o tree.o dump.o parser.o frontend.o lexer.o back_end.o
+language: main.o tree.o dump.o parser.o frontend.o lexer.o back_end.o
 	g++ obj/main.o obj/tree.o obj/dump.o obj/parser.o obj/frontend.o obj/lexer.o obj/back_end.o $(FLAGS) -o obj/lang
 
 main.o: ./main.cpp
@@ -41,8 +39,3 @@ lexer.o: ./Front_End/lexer.cpp
 
 back_end.o: ./Back_end/back_end.cpp
 	g++ -c ./Back_end/back_end.cpp $(FLAGS) -o obj/back_end.o
-
-.PHONY: clean
-
-clean:
-	rm *.o list

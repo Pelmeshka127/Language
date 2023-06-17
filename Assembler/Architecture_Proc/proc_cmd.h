@@ -27,7 +27,9 @@ DEF_CMD(ADD, CMD_ADD, 0,
 
 DEF_CMD(SUB, CMD_SUB, 0, 
 {
-    PUSH_STACK(POP_STACK - POP_STACK);
+    double a = POP_STACK;
+    double b = POP_STACK;
+    PUSH_STACK(b - a);
 })
 
 DEF_CMD(MUL, CMD_MUL, 0,

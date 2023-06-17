@@ -1,7 +1,7 @@
 #ifndef PROC_CONFIG_H_
 #define PROC_CONFIG_H_
 
-const int Def_Cmd_Len    = 20;      // Definite length of each command from source file
+const int Def_Cmd_Len    = 40;      // Definite length of each command from source file
 
 const int Def_Label_Size = 20;      // Definite size of the array of labels
 

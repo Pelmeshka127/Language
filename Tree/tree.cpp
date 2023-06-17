@@ -95,8 +95,8 @@ int Tree_Download(tree_s * const my_tree, char * file_name)
 
     Tokenizer(&tokens, &onegin);
 
-    for (int i = 0; i < tokens.capacity; i++)
-        printf("%s\n", tokens.array[i].name);
+    // for (int i = 0; i < tokens.capacity; i++)
+    //     printf("%s\n", tokens.array[i].name);
 
     my_tree->root = Get_General(&tokens); //Adding recursive decsent
     if (my_tree->root == nullptr)

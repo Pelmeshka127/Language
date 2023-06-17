@@ -8,8 +8,4 @@ LOG_OP(NICE_BIG_DICK, Op_Above_Eq)
 
 LOG_OP(NICE_DICK, Op_Eql)
 
-LOG_OP(ASS, Op_And)
-
-LOG_OP(ORAL_SEX, Op_Or)
-
 LOG_OP(PUSSY, Op_Not_Eql)

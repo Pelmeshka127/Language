@@ -166,7 +166,7 @@ int Parse_Function(FILE *dst_file, tree_node *const node, name_table *const tabl
 
     if (strcmp(node->name, "hentai") == 0)
     {
-        fprintf(dst_file, "call hentai\n");
+        fprintf(dst_file, "call :hentai\n");
         fprintf(dst_file, "hlt\n");
         fprintf(dst_file, "hentai:\n");
         Parse_Node(dst_file, node->right, table);
@@ -177,7 +177,7 @@ int Parse_Function(FILE *dst_file, tree_node *const node, name_table *const tabl
         switch(node->data)
         {
             case Op_Dec_Func:
-                fprintf(dst_file, "jump: jump_over_%s\n", node->name);
+                fprintf(dst_file, "jump :jump_over_%s\n", node->name);
                 fprintf(dst_file, "%s:\n", node->name);
                 Parse_Declaration_Arguments(dst_file, node->left, table);
                 Parse_Node(dst_file, node->right, table);
@@ -186,7 +186,7 @@ int Parse_Function(FILE *dst_file, tree_node *const node, name_table *const tabl
             
             case Op_Func_Name:
                 Parse_Call_Arguments(dst_file, node->left, table);
-                fprintf(dst_file, "call %s\n", node->name);
+                fprintf(dst_file, "call :%s\n", node->name);
                 break;
 
             default:
@@ -274,6 +274,11 @@ int Parse_Call_Arguments(FILE *dst_file, tree_node *const node, name_table *tabl
         {
             switch(cur_node->type)
             {
+                case Op_Type:
+                    Parse_Node(dst_file, cur_node, table);
+                    cur_node = cur_node->right;
+                    break;
+                
                 case Connect_Type:
                     Parse_Call_Arguments(dst_file, cur_node->left, table);
                     break;

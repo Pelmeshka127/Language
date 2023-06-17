@@ -159,7 +159,7 @@ tree_node *Get_Function_Arguments(token_s *const tokens)
 
     while (strcmp(tokens->array[tokens->size].name, "stuck") != 0)
     {
-        node_1 = Get_Petrovich(tokens);
+        node_1 = Get_Add_Sub(tokens);
 
         if (TOKEN_TYPE(Connect_Type))
         {
@@ -209,7 +209,7 @@ tree_node *Get_Type(token_s *const tokens)
 
     else
     {
-        fprintf(stderr, "Unknown token [%s] in >????\n", tokens->array[tokens->size].name);
+        //fprintf(stderr, "Unknown token [%s] in >????\n", tokens->array[tokens->size].name);
         return nullptr;
     }
 }
@@ -226,7 +226,7 @@ tree_node *Get_Assignment(token_s *const tokens)
     {   
         assert(node_1->type == Var_Type);
 
-        char symbol[2] = "";
+        char symbol[Max_Size] = "";
         strncpy(symbol, tokens->array[tokens->size].name, 1);
 
         tokens->size++;
@@ -258,7 +258,7 @@ tree_node *Get_While(token_s *const tokens)
 
     while (TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_While)
     {
-        char symbol[6] = "";
+        char symbol[Max_Size] = "";
         strncpy(symbol, tokens->array[tokens->size].name, strlen(tokens->array[tokens->size].name));
 
         tokens->size++;
@@ -364,7 +364,7 @@ tree_node *Get_Init_Var(token_s *const tokens)
 
     while (TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_Init)
     {
-        char symbol[5] = "";
+        char symbol[Max_Size] = "";
         strncpy(symbol, tokens->array[tokens->size].name, strlen(tokens->array[tokens->size].name));
 
         tokens->size++;
@@ -395,7 +395,7 @@ tree_node *Get_Input(token_s *const tokens)
 
     while (TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_Input)
     {
-        char symbol[14] = "";
+        char symbol[Max_Size] = "";
         strncpy(symbol, tokens->array[tokens->size].name, strlen(tokens->array[tokens->size].name));
 
         tokens->size++;
@@ -420,7 +420,7 @@ tree_node *Get_Print(token_s *const tokens)
 
     while (TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_Print)
     {
-        char symbol[10] = "";
+        char symbol[Max_Size] = "";
         strncpy(symbol, tokens->array[tokens->size].name, strlen(tokens->array[tokens->size].name));
         
         tokens->size++;
@@ -445,7 +445,7 @@ tree_node *Get_Ret(token_s *const tokens)
 
     while (TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_Ret)
     {
-        char symbol[7] = "";
+        char symbol[Max_Size] = "";
         strncpy(symbol, tokens->array[tokens->size].name, strlen(tokens->array[tokens->size].name));
 
         tokens->size++;
@@ -470,7 +470,7 @@ tree_node *Get_Exit(token_s *const tokens)
 
     while (TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_End)
     {
-        char symbol[10] = "";
+        char symbol[Max_Size] = "";
         strncpy(symbol, tokens->array[tokens->size].name, strlen(tokens->array[tokens->size].name));
 
         tokens->size++;
@@ -493,7 +493,7 @@ tree_node *Get_Add_Sub(token_s *const tokens)
     {
         int operation = TOKEN_DATA;
 
-        char symbol[2] = "";
+        char symbol[Max_Size] = "";
         strncpy(symbol, tokens->array[tokens->size].name, 1);
 
         tokens->size++;
@@ -522,7 +522,7 @@ tree_node *Get_Mul_Div(token_s *const tokens)
     {
         int operation = TOKEN_DATA;
 
-        char symbol[2] = "";
+        char symbol[Max_Size] = "";
         strncpy(symbol, tokens->array[tokens->size].name, 1);
 
         tokens->size++;
@@ -549,7 +549,7 @@ tree_node *Get_Power(token_s *const tokens)
 
     while (TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_Pow)
     {
-        char symbol[2] = "";
+        char symbol[Max_Size] = "";
         strncpy(symbol, tokens->array[tokens->size].name, 1);
 
         tokens->size++;
@@ -639,8 +639,17 @@ tree_node *Get_Petrovich(token_s *const tokens)
     else if (TOKEN_TYPE(Num_Type))
         node_1 = Get_Number(tokens);
 
+    else if (TOKEN_TYPE(Var_Type) && strcmp(tokens->array[tokens->size + 1].name, "im") == 0)
+    {
+        //printf("Function as a operator\n");
+        node_1 = Get_Function_Call(tokens, Op_Asg);
+    }
+
     else if (TOKEN_TYPE(Var_Type))
+    {
+        //printf("%s is var\n", tokens->array[tokens->size].name);
         node_1 = Get_Var(tokens, Default_Var);
+    }
 
 
     return node_1;

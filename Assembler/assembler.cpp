@@ -206,6 +206,7 @@ int First_Asm_Compile(Text_Info * const src_file, asm_file_info * const asmbly)
         char cmd[Def_Cmd_Len] = { 0 };
         int cmd_len = 0;
         sscanf(src_file->pointers[cur_num_str], "%s%n", cmd, &cmd_len);
+        printf("%s\n", cmd);
         char * cur_str = src_file->pointers[cur_num_str];
     
         if (strchr(cmd, ':') != nullptr)

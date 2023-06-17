@@ -70,10 +70,6 @@ DEF_CMD(NICE_BIG_DICK, Op_Above_Eq, 13, {})
 
 DEF_CMD(NICE_DICK, Op_Eql, 9, {})
 
-DEF_CMD(ASS, Op_And, 3, {})
-
-DEF_CMD(ORAL_SEX, Op_Or, 8, {})
-
 DEF_CMD(PUSSY, Op_Not_Eql, 5, {})
 
 DEF_CMD(IF, Op_If, 2, {
@@ -92,8 +88,10 @@ DEF_CMD(ELIF, Op_Elif, 4, {
     fprintf(dst_file, "jump :elif_not_%d\n", Elif_Count);
     fprintf(dst_file, "elif_%d:\n", Elif_Count++);
     Parse_Node(dst_file, node->left->right, table);
+    fprintf(dst_file, "jump :end_elif_%d\n", Elif_Count - 1);
     fprintf(dst_file, "elif_not_%d:\n", Elif_Count - 1);
     Parse_Node(dst_file, node->right, table);
+    fprintf(dst_file, "end_elif_%d:\n", Elif_Count - 1);
 })
 
 DEF_CMD(ELSE, Op_Else, 4, {
@@ -133,7 +131,7 @@ DEF_CMD(MILF, Op_Init, 4, {
         strncpy(table->array[table->size].name, node->left->name, strlen(node->left->name));
         table->array[table->size].id   = table->size;
 
-        fprintf(dst_file, "push %d\n", node->right->data);
+        Parse_Node(dst_file, node->right, table);
         fprintf(dst_file, "pop [%d]\n", table->size++);
     }
 
@@ -146,4 +144,5 @@ DEF_CMD(MILF, Op_Init, 4, {
 
 DEF_CMD(ANAL, Op_Ret, 4, {
     Parse_Node(dst_file, node->left, table);
+    fprintf(dst_file, "ret\n");
 })
