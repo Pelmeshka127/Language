@@ -64,6 +64,7 @@ enum Operation_Types {
     Op_Input        = 28,
     Op_Print        = 29,
     Op_End          = 30,
+    Op_Sqrt         = 31,
 };
 
 

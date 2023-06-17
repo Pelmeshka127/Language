@@ -70,3 +70,8 @@ DEF_CMD(EXP, Op_Exp,
 {
     return (data_t) exp(EVAL(LEFT));
 })
+
+DEF_CMD(SQRT, Op_Sqrt,
+{
+    return (data_t) sqrt(EVAL(LEFT));
+})

@@ -16,11 +16,11 @@ end_sex
 step_brother Fuckmetorial im x stuck
 start_sex
 
-    if (x nice_dick 1) start_sex
+    dildo (x nice_dick 1) start_sex
         anal 1
     end_sex
 
-    else start_sex
+    strapon start_sex
         anal x * Fuckmetorial im x - 1 stuck
     end_sex
 

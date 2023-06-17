@@ -1,9 +1,0 @@
-KEY_WORD(IF, Op_If)
-
-KEY_WORD(ELIF, Op_Elif)
-
-KEY_WORD(ELSE, Op_Else)
-
-KEY_WORD(WHILE, Op_While)
-
-KEY_WORD(CUMMING, Op_End)

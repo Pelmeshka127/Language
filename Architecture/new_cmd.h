@@ -60,6 +60,12 @@ DEF_CMD(EXP, Op_Exp, 3,
     fprintf(dst_file, "exp\n");
 })
 
+DEF_CMD(SQRT, Op_Sqrt, 4,
+{
+    Parse_Node(dst_file, node->left, table);
+    fprintf(dst_file, "sqrt\n");
+})
+
 DEF_CMD(SMALL_DICK, Op_Below, 10, {})
 
 DEF_CMD(NICE_SMALL_DICK, Op_Below_Eq, 15, {})
@@ -72,7 +78,7 @@ DEF_CMD(NICE_DICK, Op_Eql, 9, {})
 
 DEF_CMD(PUSSY, Op_Not_Eql, 5, {})
 
-DEF_CMD(IF, Op_If, 2, {
+DEF_CMD(DILDO, Op_If, 5, {
     Parse_Label(dst_file, node->left->left, table, If_Count, node->name);
     fprintf(dst_file, "jump :if_not_%d\n", If_Count);
     fprintf(dst_file, "if_%d:\n", If_Count++);
@@ -83,7 +89,7 @@ DEF_CMD(IF, Op_If, 2, {
     fprintf(dst_file, "end_if_%d:\n", If_Count - 1);
 })
 
-DEF_CMD(ELIF, Op_Elif, 4, {
+DEF_CMD(ANALBEADS, Op_Elif, 9, {
     Parse_Label(dst_file, node->left->left, table, Elif_Count, node->name);
     fprintf(dst_file, "jump :elif_not_%d\n", Elif_Count);
     fprintf(dst_file, "elif_%d:\n", Elif_Count++);
@@ -94,7 +100,7 @@ DEF_CMD(ELIF, Op_Elif, 4, {
     fprintf(dst_file, "end_elif_%d:\n", Elif_Count - 1);
 })
 
-DEF_CMD(ELSE, Op_Else, 4, {
+DEF_CMD(STRAPON, Op_Else, 7, {
     fprintf(dst_file, "else_%d:\n", Else_Count++);
     Parse_Node(dst_file, node->left, table);
 })

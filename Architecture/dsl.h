@@ -48,6 +48,9 @@
 #define EXP(left, symbol)   \
     Tree_New_Node(Op_Type, Op_Exp, symbol, left, nullptr)
 
+#define SQRT(left, symbol)  \
+    Tree_New_Node(Op_Type, Op_Sqrt, symbol, left, nullptr)
+
 #define New_Num(data) \
     Tree_New_Node(Num_Type, data)
 
@@ -70,3 +73,11 @@
     tokens->array[tokens->size].data
 
 #define FUNC_DECLARATION "step_brother"
+
+#define MAIN_FUNCTION "hentai"
+
+#define IF_WORD "dildo"
+
+#define ELIF_WORD "analbeads"
+
+#define ELSE_WORD "strapon"

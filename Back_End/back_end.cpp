@@ -1,4 +1,5 @@
 #include "back_end.h"
+#include "../Architecture/dsl.h"
 
 static int If_Count     = 1;
 
@@ -12,7 +13,7 @@ static int While_Count  = 1;
 
 int Name_Table_Ctor(name_table *const table, int capacity)
 {
-    table->array = (var_array *)calloc (capacity, sizeof(var_array));
+    table->array = (var_array *)calloc (size_t(capacity), sizeof(var_array));
     if (table->array == nullptr)
     {
         fprintf(stderr, "Error in function %s; failed allocation of the memory\n", __PRETTY_FUNCTION__);
@@ -59,8 +60,16 @@ int Parse_Node(FILE *dst_file, tree_node *const node, name_table *const table)
     switch(node->type)
     {
         case Num_Type:
-            fprintf(dst_file, "push %d\n", node->data);
+        {
+            if (node->data < 0)
+            {
+                fprintf(dst_file, "push %d\n", -1 * node->data);
+                fprintf(dst_file, "minus\n");
+            }
+            else
+                fprintf(dst_file, "push %d\n", node->data);
             break;
+        }
 
 #   define DEF_CMD(word, number, len, code)     \
         case number:                            \
@@ -83,7 +92,6 @@ int Parse_Node(FILE *dst_file, tree_node *const node, name_table *const table)
             {
                 return Incorrect_Var;
             }
-            Is_Uninitialised(node, table);
             fprintf(dst_file, "push [%d]\n", Name_Table_Analyz(node, table));
             break;
 
@@ -122,9 +130,9 @@ int Parse_Label(FILE *dst_file, tree_node *const node, name_table *const table, 
     char *operation_string = nullptr;
     operation_string = (char *)calloc (Max_Size, sizeof(char));
 
-    if (strcmp(oper, "if") == 0)
+    if (strcmp(oper, IF_WORD) == 0)
         strcpy(operation_string, "if");
-    else if (strcmp(oper, "elif") == 0)
+    else if (strcmp(oper, ELIF_WORD) == 0)
         strcpy(operation_string, "elif");
     else if (strcmp(oper, "horny") == 0)
         stpcpy(operation_string, "end_while");
@@ -164,11 +172,11 @@ int Parse_Function(FILE *dst_file, tree_node *const node, name_table *const tabl
 {
     assert(table);
 
-    if (strcmp(node->name, "hentai") == 0)
+    if (strcmp(node->name, MAIN_FUNCTION) == 0)
     {
-        fprintf(dst_file, "call :hentai\n");
+        fprintf(dst_file, "call :%s\n", MAIN_FUNCTION);
         fprintf(dst_file, "hlt\n");
-        fprintf(dst_file, "hentai:\n");
+        fprintf(dst_file, "%s:\n", MAIN_FUNCTION);
         Parse_Node(dst_file, node->right, table);
     }
 

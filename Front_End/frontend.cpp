@@ -34,7 +34,7 @@ tree_node *Get_Main(token_s *const tokens)
 
         tokens->size++;
 
-        if (strcmp("hentai", tokens->array[tokens->size].name) != 0)
+        if (strcmp(MAIN_FUNCTION, tokens->array[tokens->size].name) != 0)
         {
             return nullptr;
         }
@@ -290,7 +290,7 @@ tree_node *Get_If(token_s *const tokens)
 
     tokens->size++;
 
-    if (strcmp(condition_word, "else") != 0)
+    if (strcmp(condition_word, ELSE_WORD) != 0)
         node_1 = Get_Condition(tokens);
 
     node_2 = Get_Body(tokens);
@@ -304,7 +304,7 @@ tree_node *Get_If(token_s *const tokens)
 
     node_1 = Tree_New_Node(Op_Type, condition_num, condition_word, node_1, node_continue);
 
-    if (strcmp(condition_word, "if") == 0)
+    if (strcmp(condition_word, IF_WORD) == 0)
         return New_Connect_Type(node_1, Get_Type(tokens));
     else 
         return node_1;
@@ -346,6 +346,7 @@ tree_node *Get_Body(token_s *const tokens)
         tokens->size++;
 
         node_1 = Get_Type(tokens);
+
         assert(TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_End_Sex);
 
         tokens->size++;
@@ -593,11 +594,11 @@ tree_node *Get_Math_Function(token_s *const tokens)
 
     tree_node *node_1 = Get_Petrovich(tokens);
 
-    if (TOKEN_TYPE(Op_Type) && (TOKEN_DATA == Op_Ln || TOKEN_DATA == Op_Sin || TOKEN_DATA == Op_Cos || TOKEN_DATA == Op_Exp))
+    if (TOKEN_TYPE(Op_Type) && (TOKEN_DATA == Op_Ln || TOKEN_DATA == Op_Sin || TOKEN_DATA == Op_Cos || TOKEN_DATA == Op_Exp || TOKEN_DATA == Op_Sqrt))
     {
         int operation = TOKEN_DATA;
 
-        char symbol[4] = "";
+        char symbol[Max_Size] = "";
         strncpy(symbol, tokens->array[tokens->size].name, strlen(tokens->array[tokens->size].name));
 
         tokens->size++;
@@ -612,6 +613,8 @@ tree_node *Get_Math_Function(token_s *const tokens)
             node_1 = COS(node_2, symbol);
         else if (operation == Op_Exp)
             node_1 = EXP(node_2, symbol);
+        else if (operation == Op_Sqrt)
+            node_1 = SQRT(node_2, symbol);
     }
 
     return node_1;

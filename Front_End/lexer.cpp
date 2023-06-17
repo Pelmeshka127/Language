@@ -7,7 +7,7 @@
 
 int Tokenizer(token_s *const tokens, Text_Info *const onegin)
 {
-    tokens->array = (token_info *)calloc (onegin->symbols_count + 1, sizeof(token_info));
+    tokens->array = (token_info *)calloc (size_t(onegin->symbols_count + 1), sizeof(token_info));
 
     for (int i = 0; i < onegin->symbols_count; i++)
     {

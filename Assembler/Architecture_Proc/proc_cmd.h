@@ -97,7 +97,7 @@ DEF_CMD(JB, CMD_JB, Label,
 {
     IP++;
     // elem_t addr = (addr_t) GET_VALUE_FROM_BINARY
-    if (POP_STACK < POP_STACK)
+    if (POP_STACK > POP_STACK)
     {
         IP = GET_JUMP_ARG;
     }
@@ -108,7 +108,7 @@ DEF_CMD(JB, CMD_JB, Label,
 DEF_CMD(JBE, CMD_JBE, Label, 
 {
     IP++;
-    if (POP_STACK <= POP_STACK)
+    if (POP_STACK >= POP_STACK)
     {
         IP = GET_JUMP_ARG;
     }
@@ -119,7 +119,7 @@ DEF_CMD(JBE, CMD_JBE, Label,
 DEF_CMD(JA, CMD_JA, Label, 
 {
     IP++;
-    if (POP_STACK > POP_STACK)
+    if (POP_STACK < POP_STACK)
     {
         IP = GET_JUMP_ARG;
     }
@@ -130,7 +130,7 @@ DEF_CMD(JA, CMD_JA, Label,
 DEF_CMD(JAE, CMD_JAE, Label, 
 {
     IP++;
-    if (POP_STACK >= POP_STACK)
+    if (POP_STACK <= POP_STACK)
     {
         IP = GET_JUMP_ARG;
     }
