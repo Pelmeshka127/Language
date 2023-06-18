@@ -5,10 +5,6 @@ milf x = 0
 
 fisting_anal(x)
 
-dildo (x nice_dick 0)  start_sex
-    x = x + 1
-    end_sex
-
 suck_dick(x)
 
 cumming

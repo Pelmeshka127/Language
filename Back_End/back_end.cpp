@@ -1,5 +1,6 @@
 #include "back_end.h"
 #include "../Architecture/dsl.h"
+#include "../Front_End/frontend.h"
 
 static int If_Count     = 1;
 
@@ -71,10 +72,10 @@ int Parse_Node(FILE *dst_file, tree_node *const node, name_table *const table)
             break;
         }
 
-#   define DEF_CMD(word, number, len, code)     \
-        case number:                            \
-        code;                                   \
-        break;                                  \
+#   define DEF_CMD(language_word, number, len, code_word, code)     \
+        case number:                                                \
+        code;                                                       \
+        break;                                                      \
 
         case Op_Type:
         {
@@ -130,11 +131,11 @@ int Parse_Label(FILE *dst_file, tree_node *const node, name_table *const table, 
     char *operation_string = nullptr;
     operation_string = (char *)calloc (Max_Size, sizeof(char));
 
-    if (strcmp(oper, IF_WORD) == 0)
+    if (Stricmp(oper, IF_WORD) == 0)
         strcpy(operation_string, "if");
-    else if (strcmp(oper, ELIF_WORD) == 0)
+    else if (Stricmp(oper, ELIF_WORD) == 0)
         strcpy(operation_string, "elif");
-    else if (strcmp(oper, "horny") == 0)
+    else if (Stricmp(oper, "horny") == 0)
         stpcpy(operation_string, "end_while");
 
     switch(node->data)
@@ -172,7 +173,7 @@ int Parse_Function(FILE *dst_file, tree_node *const node, name_table *const tabl
 {
     assert(table);
 
-    if (strcmp(node->name, MAIN_FUNCTION) == 0)
+    if (Stricmp(node->name, MAIN_FUNCTION) == 0)
     {
         fprintf(dst_file, "call :%s\n", MAIN_FUNCTION);
         fprintf(dst_file, "hlt\n");

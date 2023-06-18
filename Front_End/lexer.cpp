@@ -47,21 +47,22 @@ int Tokenizer(token_s *const tokens, Text_Info *const onegin)
             (*onegin->pointers) += strlen(FUNC_DECLARATION);
         }
 
-        else 
-            #define DEF_CMD(word, number, len, code) \
-            if (Strincmp(#word, *onegin->pointers, len) == 0)   \
-            {                                                   \
-                tokens->array[tokens->capacity].type = Op_Type;            \
-                tokens->array[tokens->capacity].data = number;              \
-                tokens->array[tokens->capacity].name = (char *)calloc (len + 1, sizeof(char)); \
-                strncpy(tokens->array[tokens->capacity].name, *onegin->pointers, len);       \
-                tokens->capacity++;                             \
-                (*onegin->pointers) += len;                      \
+        else
+        
+#       define  DEF_CMD(language_word, number, len, code_word, code)                            \
+            if (Strincmp(#language_word, *onegin->pointers, len) == 0)                          \
+            {                                                                                   \
+                tokens->array[tokens->capacity].type = Op_Type;                                 \
+                tokens->array[tokens->capacity].data = number;                                  \
+                tokens->array[tokens->capacity].name = (char *)calloc (len + 1, sizeof(char));  \
+                strncpy(tokens->array[tokens->capacity].name, *onegin->pointers, len);          \
+                tokens->capacity++;                                                             \
+                (*onegin->pointers) += len;                                                     \
             }
 
                 #include "../Architecture/new_cmd.h"
 
-            #undef DEF_CMD
+#       undef   DEF_CMD
 
         else if (**onegin->pointers == '(' || **onegin->pointers == ')')
         {

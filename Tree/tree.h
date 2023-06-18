@@ -51,26 +51,25 @@ int Tree_Get_Size(tree_s * const my_tree, tree_node * const node);
 
 //-------------------------------------------------------------------------------//
 
-/// @brief Function makes tree from source file
-/// @param my_tree is ptr on the tree struct
-/// @return File_Error if creating tree failed, No_Error if it's ok
-int Tree_Download(tree_s * const my_tree, char * file_name);
-
-//-------------------------------------------------------------------------------//
-
 int Tree_Print_Pre_Order(FILE * dst_file, tree_node *const cur_node);
 
-/// @brief Function find out if the node is variable node
-/// @param cur_node is ptr on the current node
-/// @return Var_Type if it's variable, No_Error if it isn't
-int Tree_Find_Variable_Node(tree_node * const cur_node);
+int Tree_Print_Node(FILE *dst_file, tree_node *const node);
 
-//-------------------------------------------------------------------------------//
+int Tree_Print_Operation(FILE *dst_file, tree_node *const node);
 
-/// @brief Function looks after variables in the tree
-/// @param cur_node is ptr on the current node
-/// @return Var_Type if there's variable in the node, No_Error if there isn't variables
-int Tree_Is_There_Variables(tree_node * const cur_node);
+int Tree_Reader(Text_Info *const onegin, tree_node **node);
+
+int Tree_Reader_Type(char *const word);
+
+int Tree_Reader_Operation(char *const word, char * dst_word);
+
+int Front_End(tree_s * const my_tree, char * file_name);
+
+int Make_Ast_Tree(tree_s *const my_tree);
+
+int Read_Ast_Tree(tree_s *const my_tree);
+
+int Back_End(tree_s *const my_tree);
 
 //-------------------------------------------------------------------------------//
 
@@ -89,7 +88,5 @@ int Tree_Dtor(tree_s * const my_tree);
 //-------------------------------------------------------------------------------//
 
 int Check_Cmdline_Arg(int args);
-
-int Eval(tree_node * const cur_node);
 
 #endif

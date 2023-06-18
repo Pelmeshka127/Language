@@ -78,6 +78,6 @@
 
 #define IF_WORD "dildo"
 
-#define ELIF_WORD "analbeads"
+#define ELIF_WORD "anal_beads"
 
 #define ELSE_WORD "strapon"

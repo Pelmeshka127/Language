@@ -131,7 +131,7 @@ int Asm_Ctor(FILE * input_file, Text_Info * const src_file, asm_file_info * cons
 
     asmbly->error = No_Error;
 
-    asmbly->code_arr = (code_t *)calloc (2 * src_file->lines_count, sizeof(int));
+    asmbly->code_arr = (code_t *)calloc (size_t (2 * src_file->lines_count), sizeof(int));
     if (asmbly->code_arr == nullptr)
         return Alloc_Err;
     
@@ -681,7 +681,7 @@ int Make_Listing(Text_Info * const list_file, asm_file_info * const asmbly)
 
     fprintf(listing, "Line     Addres   Text                         Code\n");
 
-    while (cur_num_str < list_file->lines_count)
+    while (cur_num_str < size_t(list_file->lines_count))
     {
         char cmd[Def_Cmd_Len] = { 0 };
         int cmd_len = 0;

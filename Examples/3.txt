@@ -23,8 +23,7 @@ end_sex
 
 step_brother Linear im b, c stuck
 start_sex 
-    milf x = -1 * c / b
-    suck_dick(x)
+    suck_dick(-1 * c / b)
     cumming
 end_sex
 
@@ -36,9 +35,8 @@ start_sex
         anal 0
     end_sex
 
-    analbeads (Diskriminant nice_dick 0) start_sex
-        milf y = -1 * b / 2 / a
-        suck_dick(y)
+    anal_beads (Diskriminant nice_dick 0) start_sex
+        suck_dick(-1 * b / 2 / a)
         anal 1
     end_sex
 
