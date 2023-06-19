@@ -5,32 +5,119 @@ push 0
 pop [0]
 in
 pop [0]
-push [0]
-call :Fuckmetorial
-pop [0]
-push [0]
-out
-ret
-jump :jump_over_Fuckmetorial
-Fuckmetorial:
+push 0
 pop [1]
-push [1]
-push 1
+in
+pop [1]
+push 0
+pop [2]
+in
+pop [2]
+push [0]
+push 0
 je :if_1
 jump :if_not_1
 if_1:
-push 1
-ret
+push [1]
+push [2]
+call :Linear
 jump :end_if_1
 if_not_1:
 else_1:
+push [0]
 push [1]
-push [1]
-push 1
-sub
-call :Fuckmetorial
-mul
-ret
+push [2]
+call :Kvadrupl
 end_if_1:
 ret
-jump_over_Fuckmetorial:
+jump :jump_over_Linear
+Linear:
+pop [4]
+pop [3]
+push 1
+minus
+push [4]
+mul
+push [3]
+div
+out
+ret
+jump_over_Linear:
+jump :jump_over_Kvadrupl
+Kvadrupl:
+pop [7]
+pop [6]
+pop [5]
+push [6]
+push [6]
+mul
+push 4
+push [5]
+mul
+push [7]
+mul
+sub
+pop [8]
+push [8]
+push 0
+jb :if_2
+jump :if_not_2
+if_2:
+push 0
+ret
+jump :end_if_2
+if_not_2:
+push [8]
+push 0
+je :elif_1
+jump :elif_not_1
+elif_1:
+push 1
+minus
+push [6]
+mul
+push 2
+div
+push [5]
+div
+out
+push 1
+ret
+jump :end_elif_1
+elif_not_1:
+else_2:
+push [8]
+sqrt
+pop [8]
+push 1
+minus
+push [6]
+mul
+push [8]
+add
+push 2
+div
+push [5]
+div
+pop [9]
+push 1
+minus
+push [6]
+mul
+push [8]
+sub
+push 2
+div
+push [5]
+div
+pop [10]
+push [9]
+out
+push [10]
+out
+push 2
+ret
+end_elif_1:
+end_if_2:
+ret
+jump_over_Kvadrupl:

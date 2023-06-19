@@ -149,7 +149,7 @@ DEF_CMD(MILF, Op_Init, 4, "init", {
     }
 })
 
-DEF_CMD(ANAL, Op_Ret, 4, "return", {
+DEF_CMD(BOOBS, Op_Ret, 5, "return", {
     Parse_Node(dst_file, node->left, table);
     fprintf(dst_file, "ret\n");
 })

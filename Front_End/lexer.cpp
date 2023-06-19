@@ -39,6 +39,7 @@ int Tokenizer(token_s *const tokens, Text_Info *const onegin)
 
         else if (Strincmp(FUNC_DECLARATION, *onegin->pointers, strlen(FUNC_DECLARATION)) == 0)
         {
+            //printf("there is %s\n", FUNC_DECLARATION);
             tokens->array[tokens->capacity].name = (char *)calloc (Max_Size, sizeof(char));
             strncpy(tokens->array[tokens->capacity].name, *onegin->pointers, strlen(FUNC_DECLARATION));
             tokens->array[tokens->capacity].type = Function_Type;
@@ -80,9 +81,34 @@ int Tokenizer(token_s *const tokens, Text_Info *const onegin)
 
         if (isalpha(**onegin->pointers))
         {
+            int symbol_idx = 0;
+
             tokens->array[tokens->capacity].name = (char *)calloc (Max_Size, sizeof(char));
-            Token_Create_Var(tokens, onegin, tokens->capacity);
+
+            char *word = tokens->array[tokens->capacity].name;
+            while (isalpha(**onegin->pointers) || isdigit(**onegin->pointers))
+            {
+                *word++ = **onegin->pointers;
+                (*onegin->pointers)++;
+            }
+        
             tokens->capacity++;
+
+            char *word_1 = (char *)calloc (Max_Size, sizeof(char));
+
+            strncpy(word_1, tokens->array[tokens->capacity - 1].name, strlen(tokens->array[tokens->capacity - 1].name));
+
+            Skip_Spaces(onegin);
+
+            if (!(Token_Keyword(tokens, onegin, word_1, &symbol_idx)))
+            {
+                (*onegin->pointers)-= symbol_idx;
+                tokens->array[tokens->capacity - 1].type = Var_Type;
+            }
+
+            free(word_1);
+
+            Skip_Spaces(onegin);
         }
 
         else if (**onegin->pointers == ',')
@@ -201,3 +227,52 @@ int Strincmp(const char * str1, const char * str2, int const len)
 }
 
 //-------------------------------------------------------------------------------//
+
+int Token_Keyword(token_s *const tokens, Text_Info *const onegin, char *word_1, int *symbol_idx)
+{
+    if (**onegin->pointers != '\0')
+    {
+        char *word_new = (char *)calloc (Max_Size, sizeof(char));
+        char *added_word = word_new;
+
+        while(isalpha(**onegin->pointers) || isdigit(**onegin->pointers))
+        {
+            *added_word++ = **onegin->pointers;
+            (*onegin->pointers)++;
+            *symbol_idx += 1;
+        }
+
+        char *word_2 = (char *)calloc (Max_Size, sizeof(char));
+        strncpy(word_2, word_new, strlen(word_new));
+
+        char *word_3 = (char *)calloc (Max_Size * 2 + 1, sizeof(char));
+        strncpy(word_3, word_1, strlen(word_1));
+        strncat(word_3, "_", 1);
+        strncat(word_3, word_2, strlen(word_2));
+
+#       define  DEF_CMD(language_word, number, len, code_word, code)                            \
+            if (Strincmp(#language_word, word_3, len) == 0)                                     \
+            {                                                                                   \
+                tokens->array[tokens->capacity - 1].type = Op_Type;                                 \
+                tokens->array[tokens->capacity - 1].data = number;                                  \
+                tokens->array[tokens->capacity - 1].name = (char *)calloc (len + 1, sizeof(char));  \
+                strncpy(tokens->array[tokens->capacity - 1].name, word_3, len);          \
+                /*printf("YES: %s and data is %d and type is %d\n", tokens->array[tokens->capacity - 1].name, tokens->array[tokens->capacity - 1].data, tokens->array[tokens->capacity - 1].type); */\
+                free(word_2);   \
+                free(word_3);   \
+                return Op_Type; \
+            }
+
+                #include "../Architecture/new_cmd.h"
+
+#       undef   DEF_CMD
+    }
+
+    return No_Error;
+}
+
+
+//сделать таблицу преобразования токенов(для склеивания)
+//сделать энамы для раздельных слов и скливать их
+
+//скласть токены позже

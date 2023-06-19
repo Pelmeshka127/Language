@@ -1,53 +1,53 @@
-step_brother hentai im stuck
-start_sex
+step brother hentai im stuck
+start sex
 
 milf a = 0
-fisting_anal(a)
+fisting anal(a)
 
 milf b = 0
-fisting_anal(b)
+fisting anal(b)
 
 milf c = 0
-fisting_anal(c)
+fisting anal(c)
 
-dildo (a nice_dick 0) start_sex
+dildo (a nice dick 0) start sex
     Linear im b, c stuck
-    end_sex
+    end sex
 
-strapon start_sex
+strapon start sex
     Kvadrupl im a, b, c stuck
-    end_sex
+    end sex
 
 cumming
-end_sex
+end sex
 
-step_brother Linear im b, c stuck
-start_sex 
-    suck_dick(-1 * c / b)
+step brother Linear im b, c stuck
+start sex 
+    suck dick(-1 * c / b)
     cumming
-end_sex
+end sex
 
-step_brother Kvadrupl im a, b, c stuck
-start_sex
+step brother Kvadrupl im a, b, c stuck
+start sex
     milf Diskriminant = b * b - 4 * a * c
     
-    dildo (Diskriminant small_dick 0) start_sex
-        anal 0
-    end_sex
+    dildo (Diskriminant small dick 0) start sex
+        boobs 0
+    end sex
 
-    anal_beads (Diskriminant nice_dick 0) start_sex
-        suck_dick(-1 * b / 2 / a)
-        anal 1
-    end_sex
+    anal beads (Diskriminant nice dick 0) start sex
+        suck dick(-1 * b / 2 / a)
+        boobs 1
+    end sex
 
-    strapon start_sex
+    strapon start sex
         Diskriminant = sqrt (Diskriminant)
         milf x1 = (-1 * b + Diskriminant) / 2 / a
         milf x2 = (-1 * b - Diskriminant) / 2 / a
-        suck_dick(x1)
-        suck_dick(x2)
-        anal 2
-    end_sex
+        suck dick(x1)
+        suck dick(x2)
+        boobs 2
+    end sex
 
     cumming
-end_sex
+end sex

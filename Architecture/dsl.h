@@ -72,7 +72,7 @@
 #define TOKEN_DATA  \
     tokens->array[tokens->size].data
 
-#define FUNC_DECLARATION "step_brother"
+#define FUNC_DECLARATION "step brother"
 
 #define MAIN_FUNCTION "hentai"
 

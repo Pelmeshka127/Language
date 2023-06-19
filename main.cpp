@@ -17,6 +17,8 @@ int main(int argc, char ** argv)
 
     Front_End(&my_tree, argv[1]);
 
+    printf("FRONT_END done\n");
+
     Make_Ast_Tree(&my_tree);
 
     Tree_Dtor(&my_tree);

@@ -49,4 +49,6 @@ int Strincmp(const char * str1, const char * str2, int const len);
 
 //-------------------------------------------------------------------------------//
 
+int Token_Keyword(token_s *const tokens, Text_Info *const onegin, char *word_1, int *symbol_idx);
+
 #endif
