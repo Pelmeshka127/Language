@@ -34,10 +34,8 @@ tree_node *Get_Main(token_s *const tokens)
 
         tokens->size++;
 
-        if (strcmp(MAIN_FUNCTION, tokens->array[tokens->size].name) != 0)
-        {
+        if (!(TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_Main))
             return nullptr;
-        }
 
         node_1 = Tree_New_Node(Function_Type, Op_Func_Name, tokens->array[tokens->size].name);
 
@@ -45,7 +43,9 @@ tree_node *Get_Main(token_s *const tokens)
 
         tokens->size++;
 
-        if (strcmp(tokens->array[tokens->size].name, "im") != 0 || strcmp(tokens->array[tokens->size + 1].name, "stuck") != 0)
+        if (!(TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_Im    && 
+            tokens->array[tokens->size + 1].type == Op_Type && 
+            tokens->array[tokens->size + 1].data == Op_Stuck))
         {
             return nullptr;
         }
@@ -82,7 +82,7 @@ tree_node *Get_Dec_Function(token_s *const tokens)
 
         tokens->size++;
 
-        if (strcmp(tokens->array[tokens->size].name, "im") == 0)
+        if (TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_Im)
         {
             tokens->size++;
             node_1 = Get_Function_Arguments(tokens);
@@ -90,7 +90,7 @@ tree_node *Get_Dec_Function(token_s *const tokens)
         
         else
         {
-            fprintf(stderr, "No im stuck!!\n");
+            fprintf(stderr, "No im stuck in %s!!\n", tokens->array[tokens->size].name);
             return nullptr;
         }
 
@@ -114,7 +114,8 @@ tree_node *Get_Function_Call(token_s *const tokens, int parent_type)
 
     tree_node *node_1 = nullptr;
 
-    while (strcmp(tokens->array[tokens->size + 1].name, "im") == 0)
+    while ((tokens->array[tokens->size + 1].type == Op_Type && 
+            tokens->array[tokens->size + 1].data == Op_Im))
     {
         char symbol[Max_Size] = "";
 
@@ -124,7 +125,7 @@ tree_node *Get_Function_Call(token_s *const tokens, int parent_type)
 
         tokens->size++;
 
-        if (strcmp(tokens->array[tokens->size].name, "im") == 0)
+        if (TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_Im)
         {
             tokens->size++;
             node_1 = Get_Function_Arguments(tokens);
@@ -132,7 +133,7 @@ tree_node *Get_Function_Call(token_s *const tokens, int parent_type)
         
         else
         {
-            fprintf(stderr, "No im stuck!!\n");
+            fprintf(stderr, "No im stuck in %s!!\n", tokens->array[tokens->size].name);
             return nullptr;
         }
 
@@ -157,7 +158,7 @@ tree_node *Get_Function_Arguments(token_s *const tokens)
     tree_node *node_1 = nullptr;
     tree_node *node_2 = nullptr;
 
-    while (strcmp(tokens->array[tokens->size].name, "stuck") != 0)
+    while (!(TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_Stuck))
     {
         node_1 = Get_Add_Sub(tokens);
 
@@ -180,11 +181,18 @@ tree_node *Get_Type(token_s *const tokens)
 {
     assert(tokens);
 
-    if (TOKEN_TYPE(Var_Type) && strcmp(tokens->array[tokens->size + 1].name, "im") == 0)
+
+    if (TOKEN_TYPE(Var_Type) && tokens->array[tokens->size + 1].type == Op_Type &&
+        tokens->array[tokens->size + 1].data == Op_Im) 
+    {
         return Get_Function_Call(tokens, Op_Func_Name);
+    }
 
     else if (TOKEN_TYPE(Var_Type))
+    {
+        // printf("Assignment in %s and %d\n", tokens->array[tokens->size].name, tokens->size);
         return Get_Assignment(tokens);
+    }
     
     else if (TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_While)
         return Get_While(tokens);
@@ -227,14 +235,18 @@ tree_node *Get_Assignment(token_s *const tokens)
         assert(node_1->type == Var_Type);
 
         char symbol[Max_Size] = "";
+
         strncpy(symbol, tokens->array[tokens->size].name, 1);
 
         tokens->size++;
 
         tree_node *node_2 = nullptr;
 
-        if (strcmp(tokens->array[tokens->size + 1].name, "im") == 0)
+        if (tokens->array[tokens->size + 1].type == Op_Type && 
+            tokens->array[tokens->size + 1].data == Op_Im)
+        {
             node_2 = Get_Function_Call(tokens, Op_Asg);
+        }
 
         else
             node_2 = Get_Add_Sub(tokens);
@@ -259,6 +271,7 @@ tree_node *Get_While(token_s *const tokens)
     while (TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_While)
     {
         char symbol[Max_Size] = "";
+
         strncpy(symbol, tokens->array[tokens->size].name, strlen(tokens->array[tokens->size].name));
 
         tokens->size++;
@@ -346,7 +359,6 @@ tree_node *Get_Body(token_s *const tokens)
         tokens->size++;
 
         node_1 = Get_Type(tokens);
-
         assert(TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_End_Sex);
 
         tokens->size++;
@@ -366,6 +378,7 @@ tree_node *Get_Init_Var(token_s *const tokens)
     while (TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_Init)
     {
         char symbol[Max_Size] = "";
+
         strncpy(symbol, tokens->array[tokens->size].name, strlen(tokens->array[tokens->size].name));
 
         tokens->size++;
@@ -397,6 +410,7 @@ tree_node *Get_Input(token_s *const tokens)
     while (TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_Input)
     {
         char symbol[Max_Size] = "";
+
         strncpy(symbol, tokens->array[tokens->size].name, strlen(tokens->array[tokens->size].name));
 
         tokens->size++;
@@ -422,6 +436,7 @@ tree_node *Get_Print(token_s *const tokens)
     while (TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_Print)
     {
         char symbol[Max_Size] = "";
+
         strncpy(symbol, tokens->array[tokens->size].name, strlen(tokens->array[tokens->size].name));
         
         tokens->size++;
@@ -447,6 +462,7 @@ tree_node *Get_Ret(token_s *const tokens)
     while (TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_Ret)
     {
         char symbol[Max_Size] = "";
+
         strncpy(symbol, tokens->array[tokens->size].name, strlen(tokens->array[tokens->size].name));
 
         tokens->size++;
@@ -472,6 +488,7 @@ tree_node *Get_Exit(token_s *const tokens)
     while (TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_End)
     {
         char symbol[Max_Size] = "";
+
         strncpy(symbol, tokens->array[tokens->size].name, strlen(tokens->array[tokens->size].name));
 
         tokens->size++;
@@ -495,6 +512,7 @@ tree_node *Get_Add_Sub(token_s *const tokens)
         int operation = TOKEN_DATA;
 
         char symbol[Max_Size] = "";
+
         strncpy(symbol, tokens->array[tokens->size].name, 1);
 
         tokens->size++;
@@ -524,6 +542,7 @@ tree_node *Get_Mul_Div(token_s *const tokens)
         int operation = TOKEN_DATA;
 
         char symbol[Max_Size] = "";
+
         strncpy(symbol, tokens->array[tokens->size].name, 1);
 
         tokens->size++;
@@ -551,6 +570,7 @@ tree_node *Get_Power(token_s *const tokens)
     while (TOKEN_TYPE(Op_Type) && TOKEN_DATA == Op_Pow)
     {
         char symbol[Max_Size] = "";
+
         strncpy(symbol, tokens->array[tokens->size].name, 1);
 
         tokens->size++;
@@ -574,6 +594,7 @@ tree_node *Get_Log_Operator(token_s *const tokens)
     char *operation = tokens->array[tokens->size].name;
 
     int op_num = Is_Log_Operation(operation);
+
     if (op_num)
     {
         tokens->size++;
@@ -599,6 +620,7 @@ tree_node *Get_Math_Function(token_s *const tokens)
         int operation = TOKEN_DATA;
 
         char symbol[Max_Size] = "";
+
         strncpy(symbol, tokens->array[tokens->size].name, strlen(tokens->array[tokens->size].name));
 
         tokens->size++;
@@ -606,15 +628,15 @@ tree_node *Get_Math_Function(token_s *const tokens)
         tree_node *node_2 = Get_Petrovich(tokens);
 
         if (operation == Op_Ln)
-            node_1 = LN(node_2, symbol);
+            node_1 = LOGARIFM(node_2, symbol);
         else if (operation == Op_Sin)
-            node_1 = SIN(node_2, symbol);
+            node_1 = SINUS(node_2, symbol);
         else if (operation == Op_Cos)
-            node_1 = COS(node_2, symbol);
+            node_1 = COSINUS(node_2, symbol);
         else if (operation == Op_Exp)
-            node_1 = EXP(node_2, symbol);
+            node_1 = EXPONENTA(node_2, symbol);
         else if (operation == Op_Sqrt)
-            node_1 = SQRT(node_2, symbol);
+            node_1 = SQUARE(node_2, symbol);
     }
 
     return node_1;
@@ -642,9 +664,11 @@ tree_node *Get_Petrovich(token_s *const tokens)
     else if (TOKEN_TYPE(Num_Type))
         node_1 = Get_Number(tokens);
 
-    else if (TOKEN_TYPE(Var_Type) && strcmp(tokens->array[tokens->size + 1].name, "im") == 0)
+
+    else if (TOKEN_TYPE(Var_Type) && tokens->array[tokens->size + 1].type == Op_Type &&
+            tokens->array[tokens->size + 1].data == Op_Im)
     {
-        //printf("Function as a operator\n");
+        // printf("Function as a operator\n");
         node_1 = Get_Function_Call(tokens, Op_Asg);
     }
 
@@ -664,11 +688,9 @@ tree_node *Get_Number(token_s *const tokens)
 {
     assert(tokens);
 
-    int number = 0;
+    assert(TOKEN_TYPE(Num_Type));
 
-    sscanf(tokens->array[tokens->size].name, "%d", &number);
-
-    tree_node *node = New_Num(number);
+    tree_node *node = New_Num(TOKEN_DATA);
 
     tokens->size++;
 

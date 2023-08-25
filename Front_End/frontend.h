@@ -5,7 +5,7 @@
 
 #include "../Tree/tree.h"
 #include "../Tree/dump.h"
-#include "lexer.h"
+#include "lexer.hpp"
 #include "../Architecture/dsl.h"
 
 //-------------------------------------------------------------------------------//

@@ -66,6 +66,43 @@ DEF_CMD(SQRT, Op_Sqrt, 4, "sqrt",
     fprintf(dst_file, "sqrt\n");
 })
 
+
+DEF_CMD(SMALL, Small, 5, "", {})
+
+DEF_CMD(BIG, Big, 3, "", {})
+
+DEF_CMD(NICE, Nice, 4, "", {})
+
+DEF_CMD(DICK, Dick, 4, "", {})
+
+DEF_CMD(SUCK, Suck, 4, "", {})
+
+DEF_CMD(ANAL, Anal, 4, "", {})
+
+DEF_CMD(BEADS, Beads, 5, "", {})
+
+DEF_CMD(FISTING, Fisting, 7, "", {})
+
+DEF_CMD(START, Start, 5, "", {})
+
+DEF_CMD(END, End, 3, "", {})
+
+DEF_CMD(SEX, Sex, 3, "", {})
+
+DEF_CMD(STEP, Step, 4, "", {})
+
+DEF_CMD(BROTHER, Brother, 7, "", {})
+
+
+
+DEF_CMD(HENTAI, Op_Main, 6, MAIN_FUNCTION, {})
+
+DEF_CMD(IM, Op_Im, 2, "im", {})
+
+DEF_CMD(STUCK, Op_Stuck, 5, "stuck", {})
+
+
+
 DEF_CMD(SMALL_DICK, Op_Below, 10, "<", {})
 
 DEF_CMD(NICE_SMALL_DICK, Op_Below_Eq, 15, "<=", {})

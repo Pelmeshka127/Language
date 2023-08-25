@@ -36,19 +36,19 @@
 #define POW(left, right, op_word) \
     Tree_New_Node(Op_Type, Op_Pow, op_word, left, right)
 
-#define SIN(left, symbol)   \
+#define SINUS(left, symbol)   \
     Tree_New_Node(Op_Type, Op_Sin, symbol, left, nullptr)
 
-#define COS(left, symbol)   \
+#define COSINUS(left, symbol)   \
     Tree_New_Node(Op_Type, Op_Cos, symbol, left, nullptr)
 
-#define LN(left, symbol)    \
+#define LOGARIFM(left, symbol)    \
     Tree_New_Node(Op_Type, Op_Ln, symbol, left, nullptr)
 
-#define EXP(left, symbol)   \
+#define EXPONENTA(left, symbol)   \
     Tree_New_Node(Op_Type, Op_Exp, symbol, left, nullptr)
 
-#define SQRT(left, symbol)  \
+#define SQUARE(left, symbol)  \
     Tree_New_Node(Op_Type, Op_Sqrt, symbol, left, nullptr)
 
 #define New_Num(data) \

@@ -1,6 +1,6 @@
 #include "tree.h"
 #include "dump.h"
-#include "../Front_End/lexer.h"
+#include "../Front_End/lexer.hpp"
 #include "../Front_End/frontend.h"
 #include "../Back_End/back_end.h"
 
@@ -209,15 +209,15 @@ int Tree_Print_Operation(FILE *dst_file, tree_node *const node)
 
 int Tree_Reader(Text_Info *const onegin, tree_node ** node)
 {
-    Skip_Spaces(onegin);
+    SkipSpaces(onegin);
     int number = 0;
     int length = 0;
     char word[Max_Length] = "";
 
     if (**onegin->pointers == '(')
     {
-        Move_Pointers(onegin);
-        Skip_Spaces(onegin);
+        MovePointers(onegin);
+        SkipSpaces(onegin);
 
         if (sscanf(*onegin->pointers, "%d%n", &number, &length))
         {
@@ -271,33 +271,33 @@ int Tree_Reader(Text_Info *const onegin, tree_node ** node)
         }
     }
 
-    Skip_Spaces(onegin);
+    SkipSpaces(onegin);
 
     if (**onegin->pointers == ')')
     {
-        Move_Pointers(onegin);
+        MovePointers(onegin);
         return No_Error;
     }
 
     if (**onegin->pointers == '(')
         Tree_Reader(onegin, &(*node)->left);
 
-    Skip_Spaces(onegin);
+    SkipSpaces(onegin);
 
     if (**onegin->pointers == ')')
     {
-        Move_Pointers(onegin);
+        MovePointers(onegin);
         return No_Error;
     }
 
     if (**onegin->pointers == '(')
         Tree_Reader(onegin, &(*node)->right);
 
-    Skip_Spaces(onegin);
+    SkipSpaces(onegin);
 
     if (**onegin->pointers == ')')
     {
-        Move_Pointers(onegin);
+        MovePointers(onegin);
         return No_Error;
     }
 
@@ -342,7 +342,7 @@ int Tree_Reader_Operation(char *const word, char * dst_word)
 
 //-------------------------------------------------------------------------------//
 
-int Front_End(tree_s * const my_tree, char * file_name)
+int Front_End(tree_s *const my_tree, char *file_name)
 {
     Text_Info onegin = {};
 
@@ -365,12 +365,25 @@ int Front_End(tree_s * const my_tree, char * file_name)
         return File_Error;
     }
 
+    word_s words = {};
+
+    WordsCtor(&words, &onegin);
+
+    WordsProcessor(&words, &onegin);
+
+    for (int i = 0; i < words.size; i++)
+        printf("[%d] is [%s]; data [%d]; type [%d]\n", i, words.array[i].word,
+        words.array[i].data, words.array[i].type);
+
     token_s tokens = {};
 
-    Tokenizer(&tokens, &onegin);
+    TokenCtor(&tokens, &words);
 
-    // for (int i = 0; i < tokens.capacity; i++)
-    //     printf("%s\n", tokens.array[i].name);
+    Tokenizer(&tokens, &words);
+
+    for (int i = 0; i < tokens.capacity; i++)
+        printf("[%d] is [%s]; data [%d]; type [%d]\n", i, tokens.array[i].name,
+        tokens.array[i].data, tokens.array[i].type);
 
     my_tree->root = Get_General(&tokens);
     if (my_tree->root == nullptr)
@@ -381,7 +394,8 @@ int Front_End(tree_s * const my_tree, char * file_name)
     }
 
     Onegin_Dtor(&onegin);
-    Token_Dtor(&tokens);
+    TokenDtor(&tokens);
+    WordsDtor(&words);
 
     return No_Error;
 }

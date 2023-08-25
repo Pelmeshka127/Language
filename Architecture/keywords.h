@@ -33,3 +33,5 @@ DEF_CMD(SUCK_DICK, Op_Print, 9, "print", {
     Parse_Node(dst_file, node->left, table);
     fprintf(dst_file, "out\n");
 })
+
+DEF_CMD(STEP_BROTHER, Op_Step_Brother, 12, FUNC_DECLARATION, {})

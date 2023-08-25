@@ -1,5 +1,5 @@
-#ifndef LEXER_H_
-#define LEXER_H_
+#ifndef TOKENS_H_
+#define TOKENS_H_
 
 #include "../Tree/tree.h"
 
